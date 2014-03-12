@@ -1,4 +1,4 @@
-delight-quoridor
-================
+Quoridor
+========
 
-A copy of "d-quoridor" but written in my Delight programming language
+This repository is a copy of my "d-quoridor" repository but written in my Delight programming language.
