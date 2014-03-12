@@ -1,0 +1,9 @@
+{
+	"name": "quoridor_cli",
+	"targetType": "executable",
+	"description": "A command-line interface to the board game 'Quoridor'.",
+	"copyright": "Copyright © 2014, Peter Massey-Plantinga",
+	"authors": ["Peter Massey-Plantinga"],
+	"dependencies": {
+	}
+}
