@@ -1,0 +1,69 @@
+#. A command line interface for the quoridor ai in board.d
+	author: Peter Massey-Plantinga
+	date: 3-3-14
+
+import board
+import std.stdio
+import std.string
+import std.conv
+
+procedure main( string[] args ):
+
+	if args.length less than 3:
+		raise "Usage: ./quoridor {time for p1} {time for p2} [{move 1}...]\n Time of 0 for p1 or p2 indicates a human player"
+
+	if not isNumeric( args[1] ) or not isNumeric( args[2] ):
+		raise "Length of time for p1 must be numeric"
+
+	int[2] times = [ to!int( args[1] ), to!int( args[2] ) ]
+
+	Board board = new Board()
+
+	# Initialize board with moves from initial command
+	for move in args[3 .. $]:
+		board.move( move )
+
+	board.print_board()
+
+	string move
+	int winner
+	int turn
+
+	# Until the game is over, read moves from the command line
+	while true:
+
+		# If player is human
+		if times[ turn ] equal to 0:
+
+			move = strip( readln() )
+			if move equal to NULL:
+				break
+
+			else if move equal to "u":
+				board.undo(2)
+				turn = ( turn + 1 ) % 2
+
+			else:
+				try:
+					winner = board.move( move )
+					if winner:
+						board.print_board()
+						writeln( "Player ", winner, " wins!" )
+						break
+
+				except Exception e:
+					writeln( "Illegal move" )
+					continue
+
+		# If player is a computer
+		else:
+			move = board.ai_move( times[ turn ] )
+			if move.length more than 2 and move[2] equal to 'w':
+
+				board.print_board()
+				writeln( "Player ", turn + 1, " wins!" )
+				break
+
+		board.print_board()
+		turn = ( turn + 1 ) % 2
+
