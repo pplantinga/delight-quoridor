@@ -1,5 +1,3 @@
 quoridor_cli
-source/quoridor_cli.d
-source/board.d
 .dub/
 *.swp
