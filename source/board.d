@@ -19,9 +19,7 @@ import std.string;
 class Board
 {
 
-	/++
-	 + Main constructor for 'Board'
-	 +/
+	/// Main constructor for 'Board'
 	this()
 	{
 		my_x[0] = (BOARD_SIZE - BOARD_SIZE % 4) / 2;
@@ -74,16 +72,12 @@ class Board
 		assert(new_board.my_x[0] == BOARD_SIZE / 2);
 	}
 
-	/++
-	 + Prints the board nicely
-	 +/
+	/// Prints the board nicely
 	auto print_board()
 	{
 		write("\n");
 		
-		/+
-		 + Draw the walls of player 2
-		 +/
+		// Draw the walls of player 2
 		foreach (j; 0 .. 2)
 		{
 			foreach (i; 0 .. my_walls[1])
@@ -93,9 +87,7 @@ class Board
 			write("\n");
 		}
 
-		/+
-		 + Draw the board header
-		 +/
+		// Draw the board header
 		write("\n   ");
 		foreach (i; 0 .. BOARD_SIZE / 2 + 1)
 		{
@@ -108,18 +100,14 @@ class Board
 		}
 		writeln("+");
 		
-		/+
-		 + Draw the board with low y at the bottom
-		 +/
+		// Draw the board with low y at the bottom
 		foreach (i; 0 .. BOARD_SIZE)
 		{
 			if (i % 2 == 0)
 			{
 				string number = format("%s", i / 2 + 1);
 
-				/+
-				 + append a space to shorter numbers so formatting looks nice
-				 +/
+				// append a space to shorter numbers so formatting looks nice
 				if (number.length == 1)
 				{
 					number ~= " ";
@@ -133,9 +121,7 @@ class Board
 
 			foreach (j; 0 .. BOARD_SIZE)
 			{
-				/+
-				 + If we're at a wall location
-				 +/
+				// If we're at a wall location
 				if (j % 2 == 1)
 				{
 					if (my_board[j][i] == 3)
@@ -148,14 +134,10 @@ class Board
 					}
 				}
 
-				/+
-				 + Even rows have pieces
-				 +/
+				// Even rows have pieces
 				else if (i % 2 == 0)
 				{
-					/+
-					 + Write a piece if one exists here
-					 +/
+					// Write a piece if one exists here
 					if (my_board[j][i] != 0)
 					{
 						write(" ", my_board[j][i], " ");
@@ -166,9 +148,7 @@ class Board
 					}
 				}
 
-				/+
-				 + Odd rows have walls
-				 +/
+				// Odd rows have walls
 				else
 				{
 					if (my_board[j][i] == 3)
@@ -199,9 +179,7 @@ class Board
 		}
 		writeln("+\n");
 		
-		/+
-		 + Draw each player's walls
-		 +/
+		// Draw each player's walls
 		foreach (j; 0 .. 2)
 		{
 			foreach (i; 0 .. my_walls[0])
@@ -256,15 +234,11 @@ class Board
 	{
 		Board board = new Board();
 
-		/+
-		 + XXX: IF YOU CHANGE THE BOARD SIZE, CHANGE THIS
-		 +/
+		// XXX: IF YOU CHANGE THE BOARD SIZE, CHANGE THIS
 		static if (BOARD_SIZE == 17)
 		{
 
-			/+
-			 + moves
-			 +/
+			// moves
 			assert(board.move("e8") == 0);
 			assert(board.my_board[8][14] == 1);
 			assert(board.my_board[8][16] == 0);
@@ -275,9 +249,7 @@ class Board
 			assert(board.my_board[8][0] == 0);
 			assert(board.my_board[8][14] == 1);
 
-			/+
-			 + Make sure nothing changes during illegal move
-			 +/
+			// Make sure nothing changes during illegal move
 			try
 			{
 				board.move("a4");
@@ -291,26 +263,20 @@ class Board
 				assert(board.my_board[8][14] == 1);
 			}
 
-			/+
-			 + Move till we're adjacent
-			 +/
+			// Move till we're adjacent
 			board.move("e7");
 			board.move("e3");
 			board.move("e6");
 			board.move("e4");
 			board.move("e5");
 			
-			/+
-			 + Try jump
-			 +/
+			// Try jump
 			board.move("e6");
 			assert(board.my_board[8][10] == 2);
 			assert(board.my_board[8][8] == 1);
 			assert(board.my_board[8][6] == 0);
 
-			/+
-			 + Try walls
-			 +/
+			// Try walls
 			board.move("e6h");
 			assert(board.my_board[8][11] == 3);
 			assert(board.my_board[9][11] == 3);
@@ -373,9 +339,7 @@ class Board
 			board.move("g8");
 			board.move("h4");
 			
-			/+
-			 + check player 2 win
-			 +/
+			// check player 2 win
 			assert(board.move("g9") == 2);
 
 			board.undo(1);
@@ -386,9 +350,7 @@ class Board
 			board.move("h2");
 			board.move("i7");
 			
-			/+
-			 + check player 1 win
-			 +/
+			// check player 1 win
 			assert(board.move("h1") == 1);
 		}
 	}
@@ -406,9 +368,7 @@ class Board
 	string ai_move(int seconds)
 	{
 
-		/+
-		 + try: an opening
-		 +/
+		// try: an opening
 		int[] opening_move = opening(my_openings[my_turn % 2]);
 
 		bool moved = false;
@@ -427,9 +387,7 @@ class Board
 			}
 		}
 
-		/+
-		 + If we didn't do an opening move
-		 +/
+		// If we didn't do an opening move
 		if (!moved)
 		{
 			int i = 2;
@@ -438,9 +396,7 @@ class Board
 			StopWatch sw;
 			sw.start();
 			
-			/+
-			 + iterative deepening
-			 +/
+			// iterative deepening
 			while (i < 100)
 			{
 
@@ -475,9 +431,7 @@ class Board
 				}
 			}
 
-			/+
-			 + Check for the end of the game
-			 +/
+			// Check for the end of the game
 			auto y = BOARD_SIZE - 1 - move[1];
 			if (my_turn % 2)
 			{
@@ -493,9 +447,7 @@ class Board
 			}
 		}
 
-		/+
-		 + return the opening if we get here
-		 +/
+		// return the opening if we get here
 		return move_array_to_string(opening_move);
 	}
 
@@ -515,14 +467,10 @@ class Board
 			int o = moves[$ - 1][2];
 			int turn = my_turn % 2;
 
-			/+
-			 + update turn
-			 +/
+			// update turn
 			my_turn -= 1;
 
-			/+
-			 + undo wall
-			 +/
+			// undo wall
 			if (o)
 			{
 				int x_add = o - 1;
@@ -535,9 +483,7 @@ class Board
 				my_walls[turn] += 1;
 			}
 
-			/+
-			 + undo move
-			 +/
+			// undo move
 			else
 			{
 				my_board[x][y] = turn + 1;
@@ -561,19 +507,13 @@ class Board
 
 		string move_string;
 		
-		/+
-		 + letter
-		 +/
+		// letter
 		move_string ~= to!char(move[0] / 2 + 97);
 
-		/+
-		 + number
-		 +/
+		// number
 		move_string ~= format("%s", move[1] / 2 + 1);
 
-		/+
-		 + orientation
-		 +/
+		// orientation
 		if (move[2] == 1)
 		{
 			move_string ~= 'v';
@@ -600,9 +540,7 @@ class Board
 		int[2] my_openings;
 		int[][] moves;
 		
-		/+
-		 + This stores the walls that would block a shortest path
-		 +/
+		// This stores the walls that would block a shortest path
 		 // so we can best determine when to recalculate paths
 		bool[(BOARD_SIZE - 1) * (BOARD_SIZE - 1) / 2][2] walls_in_path;
 		
@@ -625,27 +563,19 @@ class Board
 			if (is_legal_move(x, y, old_x, old_y))
 			{
 
-				/+
-				 + make the move
-				 +/
+				// make the move
 				my_x[my_turn % 2] = x;
 				my_y[my_turn % 2] = y;
 				my_board[old_x][old_y] = 0;
 				my_board[x][y] = my_turn % 2 + 1;
 
-				/+
-				 + update shortest path length
-				 +/
+				// update shortest path length
 				path_lengths[my_turn % 2] = path_length(my_turn % 2);
 
-				/+
-				 + update turn
-				 +/
+				// update turn
 				my_turn += 1;
 
-				/+
-				 + add old location to undo list
-				 +/
+				// add old location to undo list
 				moves ~= [old_x, old_y, 0];
 
 				return true;
@@ -680,9 +610,7 @@ class Board
 				return false;
 			}
 
-			/+
-			 + Add the wall for checking both player's paths
-			 +/
+			// Add the wall for checking both player's paths
 			wall_val(x, y, o, 3);
 			
 			int test_length_one;
@@ -696,17 +624,13 @@ class Board
 				if (!test_length_one)
 				{
 
-					/+
-					 + remove wall
-					 +/
+					// remove wall
 					wall_val(x, y, o, 0);
 					return false;
 				}
 			}
 
-			/+
-			 + check player 2's path if the wall blocks it
-			 +/
+			// check player 2's path if the wall blocks it
 			if (walls_in_path[1][x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1])
 			{
 
@@ -715,17 +639,13 @@ class Board
 				if (!test_length_two)
 				{
 
-					/+
-					 + remove wall
-					 +/
+					// remove wall
 					wall_val(x, y, o, 0);
 					return false;
 				}
 			}
 
-			/+
-			 + Both players have a path, so update shortest paths
-			 +/
+			// Both players have a path, so update shortest paths
 			if (test_length_one)
 			{
 				path_lengths[0] = test_length_one;
@@ -736,19 +656,13 @@ class Board
 				path_lengths[1] = test_length_two;
 			}
 
-			/+
-			 + Reduce the walls remaining
-			 +/
+			// Reduce the walls remaining
 			my_walls[my_turn % 2] -= 1;
 
-			/+
-			 + update turn
-			 +/
+			// update turn
 			my_turn += 1;
 
-			/+
-			 + add wall to the list of moves (for undo)
-			 +/
+			// add wall to the list of moves (for undo)
 			moves ~= [x, y, o];
 
 			return true;
@@ -759,17 +673,13 @@ class Board
 
 			Board board = new Board();
 
-			/+
-			 + vertical wall
-			 +/
+			// vertical wall
 			assert(board.place_wall(1, 7, 1));
 			assert(board.my_board[1][7] == 3);
 			assert(board.my_board[1][6] == 3);
 			assert(board.my_board[1][8] == 3);
 
-			/+
-			 + horizontal wall
-			 +/
+			// horizontal wall
 			assert(board.place_wall(1, 5, 2));
 			assert(board.my_board[1][5] == 3);
 			assert(board.my_board[0][5] == 3);
@@ -778,9 +688,7 @@ class Board
 			static if (BOARD_SIZE == 17)
 			{
 
-				/+
-				 + walls in path
-				 +/
+				// walls in path
 				int x = 9;
 				int y = 1;
 				int o = 2;
@@ -793,18 +701,14 @@ class Board
 				x = 9;
 				assert(board.walls_in_path[0][x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]);
 
-				/+
-				 + Walls cannot cut off both people
-				 +/
+				// Walls cannot cut off both people
 				board.place_wall(3, 7, 2);
 				board.place_wall(7, 7, 2);
 				board.place_wall(11, 7, 2);
 				
 				assert(!board.place_wall(15, 7, 2));
 
-				/+
-				 + Walls cannot cut off either person individually
-				 +/
+				// Walls cannot cut off either person individually
 				board.place_wall(7, 1, 1);
 				board.place_wall(9, 1, 1);
 				board.place_wall(7, 15, 1);
@@ -813,9 +717,7 @@ class Board
 				assert(!board.place_wall(9, 13, 2));
 				assert(!board.place_wall(9, 3, 2));
 
-				/+
-				 + Walls are allowed to technically cut off people, but only when the last spot is taken by a person
-				 +/
+				// Walls are allowed to technically cut off people, but only when the last spot is taken by a person
 				board.place_wall(1, 15, 2);
 				board.place_wall(5, 15, 2);
 				board.place_wall(11, 15, 2);
@@ -825,9 +727,7 @@ class Board
 				board.place_wall(11, 1, 2);
 				assert(board.place_wall(15, 1, 2));
 
-				/+
-				 + Make sure both players run out of walls at 10 each
-				 +/
+				// Make sure both players run out of walls at 10 each
 				board.place_wall(1, 3, 2);
 				board.place_wall(1, 5, 2);
 				board.place_wall(1, 9, 2);
@@ -840,9 +740,7 @@ class Board
 				board.move("e8");
 				assert(!board.place_wall(1, 11, 2));
 
-				/+
-				 + Another weird situation that doesn't technically have a path
-				 +/
+				// Another weird situation that doesn't technically have a path
 				 // but is still legal
 				board = new Board();
 				board.move("a8h");
@@ -908,9 +806,7 @@ class Board
 			 +/
 			move_array[0] = (to!int(move_string[0]) - 97) * 2;
 
-			/+
-			 + Handle number
-			 +/
+			// Handle number
 			move_array[1] = (to!int(m.captures[2]) - 1) * 2;
 
 			if (!is_on_board(move_array[0]) || !is_on_board(move_array[1]))
@@ -918,17 +814,13 @@ class Board
 				throw new Exception("Move out of bounds");
 			}
 
-			/+
-			 + Special rules apply if we've got a wall rather than a move
-			 +/
+			// Special rules apply if we've got a wall rather than a move
 			if (m.captures.back == "h" || m.captures.back == "v")
 			{
 
 				move_array[2] = m.captures.back == "h";
 
-				/+
-				 + Walls are in a different place than moves, so add 1 to each value
-				 +/
+				// Walls are in a different place than moves, so add 1 to each value
 				move_array[] = move_array[] + 1;
 			}
 
@@ -979,25 +871,19 @@ class Board
 		bool is_legal_move(int x, int y, int old_x, int old_y)
 		{
 
-			/+
-			 + Check for out-of-bounds
-			 +/
+			// Check for out-of-bounds
 			if (!is_on_board(x) || !is_on_board(y))
 			{
 				return false;
 			}
 
-			/+
-			 + Check if another player is where we're going
-			 +/
+			// Check if another player is where we're going
 			if (my_board[x][y] != 0)
 			{
 				return false;
 			}
 
-			/+
-			 + jump dist
-			 +/
+			// jump dist
 			int x_dist = abs(x - old_x);
 			int y_dist = abs(y - old_y);
 			int avg_x = (x + old_x) / 2;
@@ -1006,110 +892,74 @@ class Board
 			int one_past_x = x + avg_x - old_x;
 			int one_past_y = y + avg_y - old_y;
 
-			/+
-			 + normal move: one space away and no wall between
-			 +/
+			// normal move: one space away and no wall between
 			if ((
-			/+
-				 + one space away
-				 +/
+			// one space away
 				(x_dist == 2 && y_dist == 0
 				 || y_dist == 2 && x_dist == 0)
 
-				/+
-				 + no wall in-between
-				 +/
+				// no wall in-between
 				 && in_between != 3
 			))
 			{
 				return true;
 			}
 
-			/+
-			 + jump in a straight line
-			 +/
+			// jump in a straight line
 			else if ((
 			(
-				/+
-					 + target is two away in the row
-					 +/
+				// target is two away in the row
 					x_dist == 4 && y_dist == 0
 
-					/+
-					 + no wall between players or between opponent and target
-					 +/
+					// no wall between players or between opponent and target
 					 && my_board[avg_x + 1][old_y] != 3
 					 && my_board[avg_x - 1][old_y] != 3
 
 					 || 
-					/+
-					 + two away in the column
-					 +/
+					// two away in the column
 					y_dist == 4 && x_dist == 0
 
-					/+
-					 + no wall between players or between opponent and target
-					 +/
+					// no wall between players or between opponent and target
 					 && my_board[old_x][avg_y + 1] != 3
 					 && my_board[old_x][avg_y - 1] != 3
 				)
-				/+
-				 + opponent between target and active player
-				 +/
+				// opponent between target and active player
 				 && in_between != 0
 			))
 			{
 				return true;
 			}
 
-			/+
-			 + jump diagonally if blocked by enemy player and a wall
-			 +/
+			// jump diagonally if blocked by enemy player and a wall
 			 // or another enemy player and the edge of the board
 			else if ((
 			x_dist == 2 && y_dist == 2
 				 && (
-				/+
-					 + opponent above or below
-					 +/
+				// opponent above or below
 					my_board[x][old_y] != 0
 
-					/+
-					 + wall or the edge is on the far side of opponent
-					 +/
+					// wall or the edge is on the far side of opponent
 					 && (!is_on_board(one_past_x)
 					 || my_board[one_past_x][old_y] == 3)
 					
-					/+
-					 + no wall between you and opponent
-					 +/
+					// no wall between you and opponent
 					 && my_board[avg_x][old_y] != 3
 
-					/+
-					 + no wall between opponent and target
-					 +/
+					// no wall between opponent and target
 					 && my_board[x][avg_y] != 3
 
 					 || 
-					/+
-					 + opponent to one side or the other
-					 +/
+					// opponent to one side or the other
 					my_board[old_x][y] != 0
 
-					/+
-					 + wall or edge of board beyond opponent
-					 +/
+					// wall or edge of board beyond opponent
 					 && (!is_on_board(one_past_y)
 					 || my_board[old_x][one_past_y] == 3)
 					
-					/+
-					 + no wall between players
-					 +/
+					// no wall between players
 					 && my_board[old_x][avg_y] != 3
 
-					/+
-					 + no wall between opponent and target
-					 +/
+					// no wall between opponent and target
 					 && my_board[avg_x][y] != 3
 				)
 			))
@@ -1129,9 +979,7 @@ class Board
 			int old_x = board.my_x[board.my_turn % 2];
 			int old_y = board.my_y[board.my_turn % 2];
 
-			/+
-			 + Moves
-			 +/
+			// Moves
 			assert(board.is_legal_move(old_x, old_y - 2, old_x, old_y));
 			assert(board.is_legal_move(old_x + 2, old_y, old_x, old_y));
 			assert(board.is_legal_move(old_x - 2, old_y, old_x, old_y));
@@ -1140,9 +988,7 @@ class Board
 			assert(!board.is_legal_move(old_x, old_y + 2, old_x, old_y));
 			assert(!board.is_legal_move(old_x, old_y - 1, old_x, old_y));
 
-			/+
-			 + Jumps
-			 +/
+			// Jumps
 			 // XXX: This assumes size is 17.
 			 // Maybe I'll eventually get around to generalizing
 			static if (BOARD_SIZE == 17)
@@ -1159,9 +1005,7 @@ class Board
 				old_x = board.my_x[board.my_turn % 2];
 				old_y = board.my_y[board.my_turn % 2];
 
-				/+
-				 + Check vertical jump
-				 +/
+				// Check vertical jump
 				assert(board.is_legal_move(old_x, old_y + 4, old_x, old_y));
 				assert(!board.is_legal_move(old_x + 2, old_y + 2, old_x, old_y));
 				assert(!board.is_legal_move(old_x - 2, old_y + 2, old_x, old_y));
@@ -1169,9 +1013,7 @@ class Board
 				board.move("e5h");
 				board.move("d4v");
 				
-				/+
-				 + Check diagonal jump
-				 +/
+				// Check diagonal jump
 				assert(board.is_legal_move(old_x + 2, old_y + 2, old_x, old_y));
 				assert(!board.is_legal_move(old_x, old_y + 4, old_x, old_y));
 				assert(!board.is_legal_move(old_x - 2, old_y + 2, old_x, old_y));
@@ -1184,9 +1026,7 @@ class Board
 				old_x = board.my_x[board.my_turn % 2];
 				old_y = board.my_y[board.my_turn % 2];
 
-				/+
-				 + Check the edge of the board
-				 +/
+				// Check the edge of the board
 				assert(!board.is_legal_move(old_x + 4, old_y, old_x, old_y));
 				assert(board.is_legal_move(old_x + 2, old_y + 2, old_x, old_y));
 				assert(board.is_legal_move(old_x + 2, old_y - 2, old_x, old_y));
@@ -1199,9 +1039,7 @@ class Board
 				old_x = board.my_x[board.my_turn % 2];
 				old_y = board.my_y[board.my_turn % 2];
 
-				/+
-				 + Check the corner
-				 +/
+				// Check the corner
 				assert(board.is_legal_move(old_x - 2, old_y + 2, old_x, old_y));
 			}
 		}
@@ -1217,33 +1055,25 @@ class Board
 		bool is_legal_wall(int x, int y, int o)
 		{
 
-			/+
-			 + Make sure wall isn't in move land
-			 +/
+			// Make sure wall isn't in move land
 			if (x % 2 != 1 || y % 2 != 1)
 			{
 				return false;
 			}
 
-			/+
-			 + check for out-of-bounds
-			 +/
+			// check for out-of-bounds
 			if (!is_on_board(x) || !is_on_board(y))
 			{
 				return false;
 			}
 
-			/+
-			 + Make sure orientation is valid
-			 +/
+			// Make sure orientation is valid
 			if (o != 1 && o != 2)
 			{
 				return false;
 			}
 
-			/+
-			 + Make sure the player has walls left
-			 +/
+			// Make sure the player has walls left
 			if (my_walls[my_turn % 2] == 0)
 			{
 				return false;
@@ -1266,9 +1096,7 @@ class Board
 		unittest
 		{
 			Board board = new Board();
-			/+
-			 + Walls
-			 +/
+			// Walls
 			assert(board.is_legal_wall(1, 1, 1));
 			assert(board.is_legal_wall(1, 1, 2));
 			assert(board.is_legal_wall(BOARD_SIZE - 2, BOARD_SIZE - 2, 1));
@@ -1276,9 +1104,7 @@ class Board
 			assert(!board.is_legal_wall(BOARD_SIZE, 1, 1));
 			assert(!board.is_legal_wall(2, 2, 2));
 
-			/+
-			 + Walls cannot overlap
-			 +/
+			// Walls cannot overlap
 			board.place_wall(1, 7, 2);
 			assert(!board.is_legal_wall(1, 7, 2));
 			assert(!board.is_legal_wall(1, 7, 1));
@@ -1287,9 +1113,7 @@ class Board
 			static if (BOARD_SIZE == 17)
 			{
 
-				/+
-				 + only ten walls each
-				 +/
+				// only ten walls each
 				board.place_wall(1, 1, 2);
 				board.place_wall(1, 3, 2);
 				board.place_wall(1, 5, 2);
@@ -1321,9 +1145,7 @@ class Board
 			}
 		}
 
-		/++
-		 + Asserts a move is within the limits of the board
-		 +/
+		/// Asserts a move is within the limits of the board
 		bool is_on_board(int d)
 		{
 			return d >= 0 && d < BOARD_SIZE;
@@ -1359,53 +1181,35 @@ class Board
 		}
 		body
 		{
-			/+
-			 + get current location
-			 +/
+			// get current location
 			int x = my_x[player];
 			int y = my_y[player];
 
-			/+
-			 + distance from current location
-			 +/
+			// distance from current location
 			int g;
 			
-			/+
-			 + heuristic distance (distance from goal)
-			 +/
+			// heuristic distance (distance from goal)
 			int h = heuristic(player, y);
 
-			/+
-			 + To keep track of where we go
-			 +/
+			// To keep track of where we go
 			int[BOARD_SIZE / 2 + 1][BOARD_SIZE / 2 + 1] paths;
 			
-			/+
-			 + Starting location
-			 +/
+			// Starting location
 			paths[x / 2][y / 2] = 1;
 
-			/+
-			 + This is a sort of priority queue, specific to this application
-			 +/
+			// This is a sort of priority queue, specific to this application
 			 // We'll only be adding elements of the same or slightly lower priority
 			int[][][int] nodes;
 			
-			/+
-			 + add first node, current location
-			 +/
+			// add first node, current location
 			nodes[h] ~= [x, y, g];
 
-			/+
-			 + current stores the node we're using on each iteration
-			 +/
+			// current stores the node we're using on each iteration
 			int[] current;
 			int length;
 			int key = h;
 
-			/+
-			 + while there are nodes left to evaluate
-			 +/
+			// while there are nodes left to evaluate
 			while (nodes)
 			{
 				current = nodes[key][0];
@@ -1414,17 +1218,13 @@ class Board
 				g = current[2];
 				h = heuristic(player, y);
 
-				/+
-				 + if we've reached the end
-				 +/
+				// if we've reached the end
 				if (h == 0)
 				{
 					break;
 				}
 
-				/+
-				 + Try all moves
-				 +/
+				// Try all moves
 				foreach (i; [[x - 2, y], [x, y - 2], [x + 2, y], [x, y + 2]])
 				{
 					if ((
@@ -1438,9 +1238,7 @@ class Board
 					}
 				}
 
-				/+
-				 + if this is the last of this weight
-				 +/
+				// if this is the last of this weight
 				 // check for empty queue and change the key
 				if (nodes[key].length == 1)
 				{
@@ -1470,9 +1268,7 @@ class Board
 				return 0;
 			}
 
-			/+
-			 + re-initialize
-			 +/
+			// re-initialize
 			walls_in_path[player][] = false;
 			int old_x;
 			int old_y;
@@ -1499,9 +1295,7 @@ class Board
 			static if (BOARD_SIZE == 17)
 			{
 
-				/+
-				 + path length ignores jumps
-				 +/
+				// path length ignores jumps
 				board.move("e8");
 				assert(board.path_lengths == [7, 8]);
 
@@ -1538,9 +1332,7 @@ class Board
 			int avg_x = (x + old_x) / 2;
 			int avg_y = (y + old_y) / 2;
 
-			/+
-			 + horizontal move
-			 +/
+			// horizontal move
 			if (abs(x - old_x) == 2)
 			{
 				if (is_on_board(y - 1))
@@ -1554,9 +1346,7 @@ class Board
 				}
 			}
 
-			/+
-			 + vertical move
-			 +/
+			// vertical move
 			else
 			{
 				if (is_on_board(x - 1))
@@ -1571,17 +1361,13 @@ class Board
 			}
 		}
 
-		/++
-		 + Calculate linear location in array from x and y
-		 +/
+		/// Calculate linear location in array from x and y
 		int linearize(int x, int y)
 		{
 			return x - 1 + BOARD_SIZE / 2 * (y - 1) + 1;
 		}
 
-		/++
-		 + Negascout algorithm
-		 +/
+		/// Negascout algorithm
 		int[] negascout(Board b, int depth, int alpha, int beta, int seconds, StopWatch sw, int[] best)
 		{
 
@@ -1599,9 +1385,7 @@ class Board
 				return [0, 0, 0, score];
 			}
 
-			/+
-			 + initialize values
-			 +/
+			// initialize values
 			int[] opponent_move;
 			int scout_val = beta;
 			int best_x;
@@ -1614,9 +1398,7 @@ class Board
 			bool first = true;
 			Board test_board = new Board(b);
 
-			/+
-			 + We'll only do this for the root node, where we have a best move recorded
-			 +/
+			// We'll only do this for the root node, where we have a best move recorded
 			if (best.length > 1)
 			{
 
@@ -1638,9 +1420,7 @@ class Board
 				first = false;
 			}
 
-			/+
-			 + move piece
-			 +/
+			// move piece
 			foreach (i; (
 			[[old_x - 2, old_y], 
 				[old_x, old_y - 2], 
@@ -1648,9 +1428,7 @@ class Board
 				[old_x, old_y + 2]]
 			))
 			{
-				/+
-				 + legal and we haven't checked it already
-				 +/
+				// legal and we haven't checked it already
 				if ((
 				b.is_legal_move(i[0], i[1], old_x, old_y)
 					 && (best.length < 2
@@ -1662,9 +1440,7 @@ class Board
 					test_board = new Board(b);
 					test_board.move_piece(i[0], i[1]);
 					
-					/+
-					 + Don't consider moves that don't shorten our path
-					 +/
+					// Don't consider moves that don't shorten our path
 					 // This is usually bad, and sometimes the computer will make a dumb move
 					 // to avoid getting blocked by a wall
 					if (test_board.path_lengths[b.my_turn % 2] >= old_path_length)
@@ -1704,9 +1480,7 @@ class Board
 					}
 				}
 
-				/+
-				 + Check jumps
-				 +/
+				// Check jumps
 				else if ((
 				is_on_board(i[0])
 					 && is_on_board(i[1])
@@ -1725,9 +1499,7 @@ class Board
 							test_board = new Board(b);
 							test_board.move_piece(j[0], j[1]);
 							
-							/+
-							 + Don't consider jumps that make our length longer
-							 +/
+							// Don't consider jumps that make our length longer
 							 // There can be situations where the only available move is
 							 // a jump that doesn't make our path shorter, so examine those.
 							if (test_board.path_lengths[b.my_turn % 2] > old_path_length)
@@ -1770,14 +1542,10 @@ class Board
 				}
 			}
 
-			/+
-			 + walls
-			 +/
+			// walls
 			foreach (x; 1 .. BOARD_SIZE / 2)
 			{
-				/+
-				 + odd numbers
-				 +/
+				// odd numbers
 				x = x * 2 - 1;
 
 				foreach (y; 1 .. BOARD_SIZE / 2)
@@ -1787,72 +1555,46 @@ class Board
 					foreach (o; 1 .. 3)
 					{
 
-						/+
-						 + limit to walls in the opponents path,
-						 +/
+						// limit to walls in the opponents path,
 						 // or walls in their own path, except opposite orientation to block
 						if ((
-						/+
-								 + Walls in my opponent's path
-								 +/
+						// Walls in my opponent's path
 								b.walls_in_path[(b.my_turn + 1) % 2][x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]
 
-								/+
-								 + walls that block the wall the opponent would place if I move
-								 +/
+								// walls that block the wall the opponent would place if I move
 								 || opponent_move
 								 && (
-									/+
-										 + opponent plays vertical wall, blocking walls have same x
-										 +/
+									// opponent plays vertical wall, blocking walls have same x
 										opponent_move[2] == 1 && opponent_move[0] == x
 
-										/+
-										 + check same place, opposite orientation
-										 +/
+										// check same place, opposite orientation
 										 && (opponent_move[1] == y && o == 2
 										
-											/+
-											 + check blocking either end
-											 +/
+											// check blocking either end
 											 || abs(opponent_move[1] - y) == 2 && o == 1)
 										
-										/+
-										 + opponent plays horizontal wall, blocking walls have same y
-										 +/
+										// opponent plays horizontal wall, blocking walls have same y
 										 || (opponent_move[2] == 2 && opponent_move[1] == y
 
-										/+
-										 + same place opposite orientation
-										 +/
+										// same place opposite orientation
 										 && (opponent_move[0] == x && o == 1
 										
-											/+
-											 + blocking either end
-											 +/
+											// blocking either end
 											 || abs(opponent_move[0] - x) == 2 && o == 2))
 										)
 								
-								/+
-								 + check walls around me, in case I can block off my path (least essential, but I think I'll keep it)
-								 +/
+								// check walls around me, in case I can block off my path (least essential, but I think I'll keep it)
 								 || abs(x - old_x) == 1 && abs(y - old_y) == 1
 
-								/+
-								 + check walls around the opponent
-								 +/
+								// check walls around the opponent
 								 || abs(x - my_x[(b.my_turn + 1) % 2]) == 1 && abs(y - my_y[(b.my_turn + 1) % 2]) == 1
 
-								/+
-								 + check all walls in the first case, for obvious moves that we might otherwise miss
-								 +/
+								// check all walls in the first case, for obvious moves that we might otherwise miss
 								 || best.length == 1
 							))
 						{
 
-							/+
-							 + some testing done twice, but faster to test than allocate
-							 +/
+							// some testing done twice, but faster to test than allocate
 							if (b.is_legal_wall(x, y, o))
 							{
 
@@ -1892,9 +1634,7 @@ class Board
 			return [best_x, best_y, best_o, alpha];
 		}
 
-		/++
-		 + Evaluation function for minimax
-		 +/
+		/// Evaluation function for minimax
 		int evaluate(Board b)
 		{
 			int won;
@@ -1918,17 +1658,13 @@ class Board
 		int[] opening(int which)
 		{
 
-			/+
-			 + These openings are only for board of size 9
-			 +/
+			// These openings are only for board of size 9
 			if (BOARD_SIZE != 17)
 			{
 				return null;
 			}
 
-			/+
-			 + always move 2 ahead
-			 +/
+			// always move 2 ahead
 			int[][] initial_array = [[8, 14, 0], [8, 2, 0], [8, 12, 0], [8, 4, 0]];
 
 			if (my_turn < 4)
@@ -1943,9 +1679,7 @@ class Board
 			int[][] fifth_opening = [[7, 13, 2], [7, 3, 2], [8, 10, 0], [8, 6, 0]];
 			int[][] sixth_opening = [[7, 15, 1], [7, 1, 1], [7, 13, 2], [7, 3, 2]];
 
-			/+
-			 + Different openings, moves 4-8
-			 +/
+			// Different openings, moves 4-8
 			if (my_turn < 8)
 			{
 				switch (which)
@@ -1957,9 +1691,7 @@ class Board
 					case 3:
 						return third_opening[my_turn - 4];
 					
-					/+
-					 + same openings, but mirrored
-					 +/
+					// same openings, but mirrored
 					case 4:
 						return fourth_opening[my_turn - 4];
 					case 5:
@@ -1967,18 +1699,14 @@ class Board
 					case 6:
 						return sixth_opening[my_turn - 4];
 					
-					/+
-					 + if outside this range, just use negascout
-					 +/
+					// if outside this range, just use negascout
 					default:
 						return null;
 					
 				}
 			}
 
-			/+
-			 + We're past the end of the openings
-			 +/
+			// We're past the end of the openings
 			return null;
 		}
 

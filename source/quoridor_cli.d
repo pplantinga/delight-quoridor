@@ -26,9 +26,7 @@ void main(string[] args)
 
 	Board board = new Board();
 
-	/+
-	 + Initialize board with moves from initial command
-	 +/
+	// Initialize board with moves from initial command
 	foreach (move; args[3 .. $])
 	{
 		board.move(move);
@@ -40,15 +38,11 @@ void main(string[] args)
 	int winner;
 	int turn;
 	
-	/+
-	 + Until the game is over, read moves from the command line
-	 +/
+	// Until the game is over, read moves from the command line
 	while (true)
 	{
 
-		/+
-		 + If player is human
-		 +/
+		// If player is human
 		if (times[turn] == 0)
 		{
 
@@ -85,9 +79,7 @@ void main(string[] args)
 			}
 		}
 
-		/+
-		 + If player is a computer
-		 +/
+		// If player is a computer
 		else
 		{
 			move = board.ai_move(times[turn]);
