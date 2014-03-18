@@ -1061,8 +1061,13 @@ class Board:
 			return x - 1 + BOARD_SIZE / 2 * (y - 1) + 1
 
 		#. Negascout algorithm
-		method negascout(Board b, int depth, alpha, beta, seconds, StopWatch sw, int[] best -> int[]):
-
+		method negascout(
+			Board b,
+			int depth, alpha, beta, seconds,
+			StopWatch sw,
+			int[] best
+			-> int[]
+		):
 			if (depth not more than 0
 				or b.my_y[0] equal to 0
 				or b.my_y[1] equal to BOARD_SIZE - 1

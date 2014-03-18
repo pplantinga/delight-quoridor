@@ -1377,7 +1377,6 @@ class Board
 		/// Negascout algorithm
 		int[] negascout(Board b, int depth, int alpha, int beta, int seconds, StopWatch sw, int[] best)
 		{
-
 			if ((depth <= 0
 			 || b.my_y[0] == 0
 				 || b.my_y[1] == BOARD_SIZE - 1
