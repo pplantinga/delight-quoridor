@@ -1,8 +1,8 @@
 #. The 'Board' class holds all the information
-	 pertaining to a quoridor board, like the ai
+	pertaining to a quoridor board, like the ai
 
-	 Author: Peter Plantinga
-	 Start Date: Dec 16, 2011
+	Author: Peter Plantinga
+	Start Date: Dec 16, 2011
 
 import std.stdio
 import std.math
@@ -133,7 +133,7 @@ class Board:
 	#. Alters board state with a move if legal.
 
 		Params:
-		 move_string = a properly formatted move like "e3" or "b7v"
+			move_string = a properly formatted move like "e3" or "b7v"
 
 		Returns: 0 unless someone won the game. If so, then the player who won.
 	method move(string move_string -> int):
@@ -262,11 +262,11 @@ class Board:
 
 	#. ai_move uses minimax to decide on a move and take it
 
-		 Params:
-		  seconds = the length of time to search moves
+		Params:
+			seconds = the length of time to search moves
 
-		 Returns: the move string (e.g. 'e3' or 'b7v')
-		  with a 'w' at the end if this move ended the game
+		Returns: the move string (e.g. 'e3' or 'b7v')
+			with a 'w' at the end if this move ended the game
 
 	method ai_move(int seconds -> string):
 
@@ -324,8 +324,8 @@ class Board:
 
 	#. undo last move
 
-		 Params:
-		   n = the number of moves to undo
+		Params:
+			n = the number of moves to undo
 	method undo(int n):
 
 		for i in 0 .. n:
@@ -359,7 +359,7 @@ class Board:
 
 			moves = moves[0 .. $ - 1]
 
-	#. this function takes an internal move
+	#. This function takes an internal move
 		and formats it as a human-readable string
 	method move_array_to_string(int[] move -> string):
 
@@ -377,7 +377,7 @@ class Board:
 		else if move[2] equal to 2:
 			move_string ~= 'h'
 
-		return move_string;
+		return move_string
 
 	private:
 		BOARD_SIZE = 17
@@ -393,16 +393,16 @@ class Board:
 		int[,] moves
 
 		# This stores the walls that would block a shortest path
-		# so we can best determine when to recalculate paths
+			so we can best determine when to recalculate paths
 		bool[(BOARD_SIZE - 1) * (BOARD_SIZE - 1) / 2, 2] walls_in_path
 
 		#. Checks for move legality, and if legal, moves the player
 
-			 Params:
-				 x = the desired horizontal location
-				 y = the desired vertical location
+			Params:
+				x = the desired horizontal location
+				y = the desired vertical location
 
-			 Returns: whether or not the move occurred 
+			Returns: whether or not the move occurred 
 
 		method move_piece(int x, int y -> bool):
 
@@ -439,10 +439,10 @@ class Board:
 
 		#. Checks for wall legality, and if legal, places the wall
 
-			 Params:
-				 x = the horizontal location
-				 y = the vertical location
-				 o = the orientation (1 for vertical, 2 for horizontal)
+			Params:
+				x = the horizontal location
+				y = the vertical location
+				o = the orientation (1 for vertical, 2 for horizontal)
 
 		method place_wall(int x, int y, int o -> bool):
 
@@ -596,10 +596,10 @@ class Board:
 
 		#. Translates moves from strings like 'a3h' to a more useful format
 
-			 XXX: IF YOU CHANGE THE BOARD_SIZE CHANGE THIS
+			XXX: IF YOU CHANGE THE BOARD_SIZE CHANGE THIS
 
-			 Returns: array of form [x, y, o]
-			  where o is the orientation, 0 no wall, 1 vertical, 2 horizontal
+			Returns: array of form [x, y, o]
+				where o is the orientation, 0 no wall, 1 vertical, 2 horizontal
 		method move_string_to_array(string move_string -> int[3]):
 
 			auto m = match(move_string, regex("^([a-i])([1-9])(h|v)?$"))
@@ -610,7 +610,6 @@ class Board:
 
 			# I don't advocate doing char to int conversions this way...
 				it was just a quick generalization
-				Handle letter
 			move_array[0] = (to!int(move_string[0]) - 97) * 2
 
 			# Handle number
@@ -712,7 +711,7 @@ class Board:
 				return TRUE
 
 			# jump diagonally if blocked by enemy player and a wall
-			# or another enemy player and the edge of the board
+				or another enemy player and the edge of the board
 			else if (
 				x_dist equal to 2 and y_dist equal to 2 
 				and (
@@ -764,8 +763,8 @@ class Board:
 			assert not board.is_legal_move(old_x, old_y - 1, old_x, old_y)
 
 			# Jumps
-			# XXX: This assumes size is 17.
-			# Maybe I'll eventually get around to generalizing
+				XXX: This assumes size is 17.
+				TODO: Maybe I'll eventually get around to generalizing
 			static if BOARD_SIZE equal to 17:
 
 				board.move("e8")
@@ -818,10 +817,10 @@ class Board:
 
 		#. Asserts a wall placement is legal
 
-			 Params:
-				 x = horizontal location of new wall
-				 y = vertical location of new wall
-				 o = orientation of new wall (vertical, 1, or horizontal, 2)
+			Params:
+				x = horizontal location of new wall
+				y = vertical location of new wall
+				o = orientation of new wall (vertical, 1, or horizontal, 2)
 		method is_legal_wall(int x, int y, int o -> bool):
 
 			# Make sure wall isn't in move land
@@ -912,10 +911,10 @@ class Board:
 			assert not board.is_on_board(BOARD_SIZE)
 
 		#. Finds the length of the shortest path for a player
-			 Also keeps track of walls that would block the path
+			Also keeps track of walls that would block the path
 
-			 Returns: length of the shortest path, ignoring the other player
-				 0 for no path
+			Returns: length of the shortest path, ignoring the other player
+				0 for no path
 		method path_length(int player -> int):
 		in:
 			int other_player = (player + 1) % 2
@@ -975,7 +974,7 @@ class Board:
 						nodes[g + h + 2] ~= [i[0], i[1], g + 2]
 
 				# if this is the last of this weight
-				# check for empty queue and change the key 
+					check for empty queue and change the key 
 				if nodes[key].length equal to 1:
 
 					nodes.remove(key)
@@ -1071,7 +1070,7 @@ class Board:
 			):
 				int score = evaluate(b)
 				if b.my_turn % 2 equal to 0:
-					score = -score;
+					score = -score
 				return [0, 0, 0, score]
 
 			# initialize values
@@ -1095,7 +1094,15 @@ class Board:
 				else:
 					test_board.place_wall(best[0], best[1], best[2])
 
-				opponent_move = negascout(test_board, depth - 1, -scout_val, -alpha, seconds, sw, NULL)
+				opponent_move = negascout(
+					test_board,
+					depth - 1,
+					-scout_val,
+					-alpha,
+					seconds,
+					sw,
+					NULL
+				)
 
 				alpha = -opponent_move[3]
 				best_x = best[0]
@@ -1113,28 +1120,46 @@ class Board:
 				# legal and we haven't checked it already
 				if (
 					b.is_legal_move(i[0], i[1], old_x, old_y)
-					and (best.length less than 2
+					and (
+						best.length less than 2
 						or best[2] not equal to 0
 						or best[0] not equal to i[0]
-						or best[1] not equal to i[1])
+						or best[1] not equal to i[1]
+					)
 				):
 					test_board = new Board(b)
 					test_board.move_piece(i[0], i[1])
 
 					# Don't consider moves that don't shorten our path
-					# This is usually bad, and sometimes the computer will make a dumb move
-					# to avoid getting blocked by a wall
+						This is usually bad, and sometimes the computer will make a
+						dumb move to avoid getting blocked by a wall
 					if test_board.path_lengths[b.my_turn % 2] not less than old_path_length:
 						continue
 
-					opponent_move = negascout(test_board, depth - 1, -scout_val, -alpha, seconds, sw, NULL)
+					opponent_move = negascout(
+						test_board,
+						depth - 1,
+						-scout_val,
+						-alpha,
+						seconds,
+						sw,
+						NULL
+					)
 
 					if (
 						alpha less than -opponent_move[3]
 						and -opponent_move[3] less than beta
 						and not first
 					):
-						opponent_move = negascout(test_board, depth - 1, -beta, -alpha, seconds, sw, NULL)
+						opponent_move = negascout(
+							test_board,
+							depth - 1,
+							-beta,
+							-alpha,
+							seconds,
+							sw,
+							NULL
+						)
 
 					if -opponent_move[3] more than alpha:
 						alpha = -opponent_move[3]
@@ -1167,19 +1192,35 @@ class Board:
 							test_board.move_piece(j[0], j[1])
 
 							# Don't consider jumps that make our length longer
-							# There can be situations where the only available move is
-							# a jump that doesn't make our path shorter, so examine those.
+								There can be situations where the only available move is
+								a jump that doesn't make our path shorter, so examine those.
 							if test_board.path_lengths[b.my_turn % 2] more than old_path_length:
 								continue
 
-							opponent_move = negascout(test_board, depth - 1, -scout_val, -alpha, seconds, sw, NULL)
+							opponent_move = negascout(
+								test_board,
+								depth - 1,
+								-scout_val,
+								-alpha,
+								seconds,
+								sw,
+								NULL
+							)
 
 							if (
 								alpha less than -opponent_move[3]
 								and -opponent_move[3] less than beta
 								and not first
 							):
-								opponent_move = negascout(test_board, depth - 1, -beta, -alpha, seconds, sw, NULL)
+								opponent_move = negascout(
+									test_board,
+									depth - 1,
+									-beta,
+									-alpha,
+									seconds,
+									sw,
+									NULL
+								)
 
 							if -opponent_move[3] more than alpha:
 								alpha = -opponent_move[3]
@@ -1187,7 +1228,10 @@ class Board:
 								best_y = j[1]
 								best_o = 0
 
-							if alpha not less than beta or sw.peek.seconds more than seconds:
+							if (
+								alpha not less than beta
+								or sw.peek.seconds more than seconds
+							):
 								return [best_x, best_y, best_o, alpha]
 
 							scout_val = alpha + 1
@@ -1206,7 +1250,7 @@ class Board:
 					for o in 1 .. 3:
 
 						# limit to walls in the opponents path,
-						# or walls in their own path, except opposite orientation to block
+							or walls in their own path, but opposite orientation to block
 						if (
 								# Walls in my opponent's path
 								b.walls_in_path[(b.my_turn + 1) % 2 ,  x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]
@@ -1233,13 +1277,15 @@ class Board:
 											or abs(opponent_move[0] - x) equal to 2 and o equal to 2))
 									)
 
-								# check walls around me, in case I can block off my path (least essential, but I think I'll keep it)
+								# check walls around me, in case I can block off my path
+									(least essential, but I think I'll keep it)
 								or abs(x - old_x) equal to 1 and abs(y - old_y) equal to 1
 
 								# check walls around the opponent
 								or abs(x - my_x[(b.my_turn + 1) % 2]) equal to 1 and abs(y - my_y[(b.my_turn + 1) % 2]) equal to 1
 
-								# check all walls in the first case, for obvious moves that we might otherwise miss
+								# check all walls in the first case
+									for obvious moves that we might otherwise miss
 								or best.length equal to 1
 						):
 
@@ -1249,10 +1295,30 @@ class Board:
 								test_board = new Board(b)
 								if test_board.place_wall(x, y, o):
 
-									score = -negascout(test_board, depth - 1, -scout_val, -alpha, seconds, sw, NULL)[3]
+									score = -negascout(
+										test_board,
+										depth - 1,
+										-scout_val,
+										-alpha,
+										seconds,
+										sw,
+										NULL
+									)[3]
 
-									if alpha less than score and score less than beta and not first:
-										score = -negascout(test_board, depth - 1, -beta, -alpha, seconds, sw, NULL)[3]
+									if (
+										alpha less than score
+										and score less than beta
+										and not first
+									):
+										score = -negascout(
+											test_board,
+											depth - 1,
+											-beta,
+											-alpha,
+											seconds,
+											sw,
+											NULL
+										)[3]
 
 									if score more than alpha:
 
@@ -1261,7 +1327,10 @@ class Board:
 										best_y = y
 										best_o = o
 
-									if alpha not less than beta or sw.peek.seconds more than seconds:
+									if (
+										alpha not less than beta
+										or sw.peek.seconds more than seconds
+									):
 										return [best_x, best_y, best_o, alpha]
 
 									scout_val = alpha + 1

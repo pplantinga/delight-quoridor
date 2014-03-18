@@ -1,9 +1,9 @@
 /++
  + The 'Board' class holds all the information
- +   pertaining to a quoridor board, like the ai
+ + pertaining to a quoridor board, like the ai
  +
- +   Author: Peter Plantinga
- +   Start Date: Dec 16, 2011
+ + Author: Peter Plantinga
+ + Start Date: Dec 16, 2011
  +/
 
 import std.stdio;
@@ -358,11 +358,11 @@ class Board
 	/++
 	 + ai_move uses minimax to decide on a move and take it
 	 +
-	 +   Params:
-	 +     seconds = the length of time to search moves
+	 + Params:
+	 +   seconds = the length of time to search moves
 	 +
-	 +   Returns: the move string (e.g. 'e3' or 'b7v')
-	 +     with a 'w' at the end if this move ended the game
+	 + Returns: the move string (e.g. 'e3' or 'b7v')
+	 +   with a 'w' at the end if this move ended the game
 	 +/
 	
 	string ai_move(int seconds)
@@ -454,8 +454,8 @@ class Board
 	/++
 	 + undo last move
 	 +
-	 +   Params:
-	 +       n = the number of moves to undo
+	 + Params:
+	 +   n = the number of moves to undo
 	 +/
 	auto undo(int n)
 	{
@@ -499,7 +499,7 @@ class Board
 	}
 
 	/++
-	 + this function takes an internal move
+	 + This function takes an internal move
 	 + and formats it as a human-readable string
 	 +/
 	string move_array_to_string(int[] move)
@@ -540,18 +540,20 @@ class Board
 		int[2] my_openings;
 		int[][] moves;
 		
-		// This stores the walls that would block a shortest path
-		 // so we can best determine when to recalculate paths
+		/+
+		 + This stores the walls that would block a shortest path
+		 + so we can best determine when to recalculate paths
+		 +/
 		bool[(BOARD_SIZE - 1) * (BOARD_SIZE - 1) / 2][2] walls_in_path;
 		
 		/++
 		 + Checks for move legality, and if legal, moves the player
 		 +
-		 +   Params:
-		 +     x = the desired horizontal location
-		 +     y = the desired vertical location
+		 + Params:
+		 +   x = the desired horizontal location
+		 +   y = the desired vertical location
 		 +
-		 +   Returns: whether or not the move occurred 
+		 + Returns: whether or not the move occurred 
 		 +/
 		
 		bool move_piece(int x, int y)
@@ -596,10 +598,10 @@ class Board
 		/++
 		 + Checks for wall legality, and if legal, places the wall
 		 +
-		 +   Params:
-		 +     x = the horizontal location
-		 +     y = the vertical location
-		 +     o = the orientation (1 for vertical, 2 for horizontal)
+		 + Params:
+		 +   x = the horizontal location
+		 +   y = the vertical location
+		 +   o = the orientation (1 for vertical, 2 for horizontal)
 		 +/
 		
 		bool place_wall(int x, int y, int o)
@@ -783,10 +785,10 @@ class Board
 		/++
 		 + Translates moves from strings like 'a3h' to a more useful format
 		 +
-		 +   XXX: IF YOU CHANGE THE BOARD_SIZE CHANGE THIS
+		 + XXX: IF YOU CHANGE THE BOARD_SIZE CHANGE THIS
 		 +
-		 +   Returns: array of form [x, y, o]
-		 +     where o is the orientation, 0 no wall, 1 vertical, 2 horizontal
+		 + Returns: array of form [x, y, o]
+		 +   where o is the orientation, 0 no wall, 1 vertical, 2 horizontal
 		 +/
 		int[3] move_string_to_array(string move_string)
 		{
@@ -802,7 +804,6 @@ class Board
 			/+
 			 + I don't advocate doing char to int conversions this way...
 			 + it was just a quick generalization
-			 + Handle letter
 			 +/
 			move_array[0] = (to!int(move_string[0]) - 97) * 2;
 
@@ -930,8 +931,10 @@ class Board
 				return true;
 			}
 
-			// jump diagonally if blocked by enemy player and a wall
-			 // or another enemy player and the edge of the board
+			/+
+			 + jump diagonally if blocked by enemy player and a wall
+			 + or another enemy player and the edge of the board
+			 +/
 			else if ((
 			x_dist == 2 && y_dist == 2
 				 && (
@@ -988,9 +991,11 @@ class Board
 			assert(!board.is_legal_move(old_x, old_y + 2, old_x, old_y));
 			assert(!board.is_legal_move(old_x, old_y - 1, old_x, old_y));
 
-			// Jumps
-			 // XXX: This assumes size is 17.
-			 // Maybe I'll eventually get around to generalizing
+			/+
+			 + Jumps
+			 + XXX: This assumes size is 17.
+			 + TODO: Maybe I'll eventually get around to generalizing
+			 +/
 			static if (BOARD_SIZE == 17)
 			{
 
@@ -1047,10 +1052,10 @@ class Board
 		/++
 		 + Asserts a wall placement is legal
 		 +
-		 +   Params:
-		 +     x = horizontal location of new wall
-		 +     y = vertical location of new wall
-		 +     o = orientation of new wall (vertical, 1, or horizontal, 2)
+		 + Params:
+		 +   x = horizontal location of new wall
+		 +   y = vertical location of new wall
+		 +   o = orientation of new wall (vertical, 1, or horizontal, 2)
 		 +/
 		bool is_legal_wall(int x, int y, int o)
 		{
@@ -1163,10 +1168,10 @@ class Board
 
 		/++
 		 + Finds the length of the shortest path for a player
-		 +   Also keeps track of walls that would block the path
+		 + Also keeps track of walls that would block the path
 		 +
-		 +   Returns: length of the shortest path, ignoring the other player
-		 +     0 for no path
+		 + Returns: length of the shortest path, ignoring the other player
+		 +   0 for no path
 		 +/
 		int path_length(int player)
 		in
@@ -1238,8 +1243,10 @@ class Board
 					}
 				}
 
-				// if this is the last of this weight
-				 // check for empty queue and change the key
+				/+
+				 + if this is the last of this weight
+				 + check for empty queue and change the key 
+				 +/
 				if (nodes[key].length == 1)
 				{
 
@@ -1411,7 +1418,15 @@ class Board
 					test_board.place_wall(best[0], best[1], best[2]);
 				}
 
-				opponent_move = negascout(test_board, depth - 1, -scout_val, -alpha, seconds, sw, null);
+				opponent_move = negascout(
+				test_board, 
+					depth - 1, 
+					-scout_val, 
+					-alpha, 
+					seconds, 
+					sw, 
+					null
+				);
 
 				alpha = -opponent_move[3];
 				best_x = best[0];
@@ -1431,24 +1446,36 @@ class Board
 				// legal and we haven't checked it already
 				if ((
 				b.is_legal_move(i[0], i[1], old_x, old_y)
-					 && (best.length < 2
-					 || best[2] != 0
+					 && (
+					best.length < 2
+						 || best[2] != 0
 						 || best[0] != i[0]
-						 || best[1] != i[1])
-					))
+						 || best[1] != i[1]
+					)
+				))
 				{
 					test_board = new Board(b);
 					test_board.move_piece(i[0], i[1]);
 					
-					// Don't consider moves that don't shorten our path
-					 // This is usually bad, and sometimes the computer will make a dumb move
-					 // to avoid getting blocked by a wall
+					/+
+					 + Don't consider moves that don't shorten our path
+					 + This is usually bad, and sometimes the computer will make a
+					 + dumb move to avoid getting blocked by a wall
+					 +/
 					if (test_board.path_lengths[b.my_turn % 2] >= old_path_length)
 					{
 						continue;
 					}
 
-					opponent_move = negascout(test_board, depth - 1, -scout_val, -alpha, seconds, sw, null);
+					opponent_move = negascout(
+					test_board, 
+						depth - 1, 
+						-scout_val, 
+						-alpha, 
+						seconds, 
+						sw, 
+						null
+					);
 
 					if ((
 					alpha < -opponent_move[3]
@@ -1456,7 +1483,15 @@ class Board
 						 && !first
 					))
 					{
-						opponent_move = negascout(test_board, depth - 1, -beta, -alpha, seconds, sw, null);
+						opponent_move = negascout(
+						test_board, 
+							depth - 1, 
+							-beta, 
+							-alpha, 
+							seconds, 
+							sw, 
+							null
+						);
 					}
 
 					if (-opponent_move[3] > alpha)
@@ -1499,15 +1534,25 @@ class Board
 							test_board = new Board(b);
 							test_board.move_piece(j[0], j[1]);
 							
-							// Don't consider jumps that make our length longer
-							 // There can be situations where the only available move is
-							 // a jump that doesn't make our path shorter, so examine those.
+							/+
+							 + Don't consider jumps that make our length longer
+							 + There can be situations where the only available move is
+							 + a jump that doesn't make our path shorter, so examine those.
+							 +/
 							if (test_board.path_lengths[b.my_turn % 2] > old_path_length)
 							{
 								continue;
 							}
 
-							opponent_move = negascout(test_board, depth - 1, -scout_val, -alpha, seconds, sw, null);
+							opponent_move = negascout(
+							test_board, 
+								depth - 1, 
+								-scout_val, 
+								-alpha, 
+								seconds, 
+								sw, 
+								null
+							);
 
 							if ((
 							alpha < -opponent_move[3]
@@ -1515,7 +1560,15 @@ class Board
 								 && !first
 							))
 							{
-								opponent_move = negascout(test_board, depth - 1, -beta, -alpha, seconds, sw, null);
+								opponent_move = negascout(
+								test_board, 
+									depth - 1, 
+									-beta, 
+									-alpha, 
+									seconds, 
+									sw, 
+									null
+								);
 							}
 
 							if (-opponent_move[3] > alpha)
@@ -1526,7 +1579,10 @@ class Board
 								best_o = 0;
 							}
 
-							if (alpha >= beta || sw.peek.seconds > seconds)
+							if ((
+							alpha >= beta
+								 || sw.peek.seconds > seconds
+							))
 							{
 								return [best_x, best_y, best_o, alpha];
 							}
@@ -1555,8 +1611,10 @@ class Board
 					foreach (o; 1 .. 3)
 					{
 
-						// limit to walls in the opponents path,
-						 // or walls in their own path, except opposite orientation to block
+						/+
+						 + limit to walls in the opponents path,
+						 + or walls in their own path, but opposite orientation to block
+						 +/
 						if ((
 						// Walls in my opponent's path
 								b.walls_in_path[(b.my_turn + 1) % 2][x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]
@@ -1583,13 +1641,19 @@ class Board
 											 || abs(opponent_move[0] - x) == 2 && o == 2))
 										)
 								
-								// check walls around me, in case I can block off my path (least essential, but I think I'll keep it)
+								/+
+								 + check walls around me, in case I can block off my path
+								 + (least essential, but I think I'll keep it)
+								 +/
 								 || abs(x - old_x) == 1 && abs(y - old_y) == 1
 
 								// check walls around the opponent
 								 || abs(x - my_x[(b.my_turn + 1) % 2]) == 1 && abs(y - my_y[(b.my_turn + 1) % 2]) == 1
 
-								// check all walls in the first case, for obvious moves that we might otherwise miss
+								/+
+								 + check all walls in the first case
+								 + for obvious moves that we might otherwise miss
+								 +/
 								 || best.length == 1
 							))
 						{
@@ -1602,11 +1666,31 @@ class Board
 								if (test_board.place_wall(x, y, o))
 								{
 
-									score = -negascout(test_board, depth - 1, -scout_val, -alpha, seconds, sw, null)[3];
+									score = -negascout(
+									test_board, 
+										depth - 1, 
+										-scout_val, 
+										-alpha, 
+										seconds, 
+										sw, 
+										null
+									)[3];
 
-									if (alpha < score && score < beta && !first)
+									if ((
+									alpha < score
+										 && score < beta
+										 && !first
+									))
 									{
-										score = -negascout(test_board, depth - 1, -beta, -alpha, seconds, sw, null)[3];
+										score = -negascout(
+										test_board, 
+											depth - 1, 
+											-beta, 
+											-alpha, 
+											seconds, 
+											sw, 
+											null
+										)[3];
 									}
 
 									if (score > alpha)
@@ -1618,7 +1702,10 @@ class Board
 										best_o = o;
 									}
 
-									if (alpha >= beta || sw.peek.seconds > seconds)
+									if ((
+									alpha >= beta
+										 || sw.peek.seconds > seconds
+									))
 									{
 										return [best_x, best_y, best_o, alpha];
 									}
