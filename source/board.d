@@ -1,3 +1,4 @@
+import std.range : iota;
 /++
  + The 'Board' class holds all the information
  + pertaining to a quoridor board, like the ai
@@ -89,9 +90,9 @@ class Board
 
 		// Draw the board header
 		write("\n   ");
-		foreach (i; 0 .. BOARD_SIZE / 2 + 1)
+		foreach (c; 'a' .. 'j')
 		{
-			write("   " ~ to!char(i + 97));
+			write("   " ~ c);
 		}
 		write("\n   ");
 		foreach (i; 0 .. BOARD_SIZE / 2 + 1)
@@ -208,7 +209,7 @@ class Board
 
 			if (!move_piece(move_array[0], move_array[1]))
 			{
-				throw new Exception("Illegal move, [x, y]: " ~ to!string(move_array[0 .. 2]));
+				throw new Exception(format("Illegal move, [x, y]: %s", move_array[0 .. 2]));
 			}
 			else if ((
 			(my_turn % 2) && move_array[1] == 0
@@ -223,7 +224,7 @@ class Board
 		{
 			if (!place_wall(move_array[0], move_array[1], move_array[2]))
 			{
-				throw new Exception("Illegal wall, [x, y, o]: " ~ to!string(move_array));
+				throw new Exception(format("Illegal wall, [x, y, o]: %s", move_array));
 			}
 		}
 
@@ -772,10 +773,8 @@ class Board
 			Board board = new Board();
 			foreach (x; [BOARD_SIZE / 2 - 1, BOARD_SIZE / 2 + 1])
 			{
-
-				foreach (i; 1 .. BOARD_SIZE / 2)
+				foreach (y; iota(1, BOARD_SIZE - 1, 2))
 				{
-					y = y * 2 - 1;
 					assert(board.walls_in_path[0][linearize(x, y)]);
 					assert(board.walls_in_path[1][linearize(x, y)]);
 				}
@@ -1598,15 +1597,10 @@ class Board
 			}
 
 			// walls
-			foreach (x; 1 .. BOARD_SIZE / 2)
+			foreach (x; iota(1, BOARD_SIZE, 2))
 			{
-				// odd numbers
-				x = x * 2 - 1;
-
-				foreach (y; 1 .. BOARD_SIZE / 2)
+				foreach (y; iota(1, BOARD_SIZE, 2))
 				{
-					y = y * 2 - 1;
-
 					foreach (o; 1 .. 3)
 					{
 
