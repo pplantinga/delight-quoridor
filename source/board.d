@@ -466,10 +466,10 @@ class Board
 			int x = moves[$ - 1][0];
 			int y = moves[$ - 1][1];
 			int o = moves[$ - 1][2];
-			int turn = my_turn % 2;
 
 			// update turn
 			my_turn -= 1;
+			int turn = my_turn % 2;
 
 			// undo wall
 			if (o)
@@ -775,8 +775,8 @@ class Board
 			{
 				foreach (y; iota(1, BOARD_SIZE - 1, 2))
 				{
-					assert(board.walls_in_path[0][linearize(x, y)]);
-					assert(board.walls_in_path[1][linearize(x, y)]);
+					assert(board.walls_in_path[0][board.linearize(x, y)]);
+					assert(board.walls_in_path[1][board.linearize(x, y)]);
 				}
 			}
 		}
@@ -1125,8 +1125,6 @@ class Board
 				board.place_wall(1, 11, 2);
 				board.place_wall(1, 13, 2);
 				board.place_wall(5, 13, 2);
-				
-				writeln(board.my_walls);
 				board.place_wall(5, 11, 2);
 				board.place_wall(5, 9, 2);
 				board.place_wall(5, 7, 2);
@@ -1140,7 +1138,6 @@ class Board
 				board.place_wall(9, 9, 2);
 				board.place_wall(9, 11, 2);
 				
-				writeln(board.my_walls);
 				assert(!board.is_legal_wall(9, 9, 2));
 
 				board.move("f9");
