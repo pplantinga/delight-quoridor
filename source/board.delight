@@ -304,11 +304,11 @@ class Board:
 
 			if move[2]:
 				if not place_wall(move[0], move[1], move[2]):
-					raise new Exception(format("AI TRIED TO PLAY ", move))
+					raise new Exception(format("AI TRIED TO PLAY %s", move))
 
 			else:
 				if not move_piece(move[0], move[1]):
-					raise new Exception(format("AI TRIED TO PLAY ", move))
+					raise new Exception(format("AI TRIED TO PLAY %s", move))
 
 			# Check for the end of the game
 			auto y = BOARD_SIZE - 1 - move[1]
@@ -515,15 +515,14 @@ class Board:
 				# walls in path
 				int x = 9
 				int y = 1
-				int o = 2
+				int o = 1
 
-				assert board.walls_in_path[1,  x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]
-				x = 7
-				assert board.walls_in_path[1,  x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]
+				assert board.walls_in_path[1, linearize(x, y, o)]
+				assert board.walls_in_path[1, linearize(x, y, o)]
 				y = 15
-				assert board.walls_in_path[0,  x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]
+				assert board.walls_in_path[0, linearize(x, y, o)]
 				x = 9
-				assert board.walls_in_path[0,  x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]
+				assert board.walls_in_path[0, linearize(x, y, o)]
 
 				# Walls cannot cut off both people
 				board.place_wall(3, 7, 2)
@@ -589,8 +588,8 @@ class Board:
 			Board board = new Board()
 			for x in [BOARD_SIZE / 2 - 1, BOARD_SIZE / 2 + 1]:
 				for y in 1 .. BOARD_SIZE - 1 by 2:
-					assert board.walls_in_path[0, board.linearize(x, y)]
-					assert board.walls_in_path[1, board.linearize(x, y)]
+					assert board.walls_in_path[0, board.linearize(x, y, 1)]
+					assert board.walls_in_path[1, board.linearize(x, y, 1)]
 
 		#. Translates moves from strings like 'a3h' to a more useful format
 
@@ -1038,22 +1037,22 @@ class Board:
 			# horizontal move
 			if abs(x - old_x) equal to 2:
 				if is_on_board(y - 1):
-					walls_in_path[player, linearize(avg_x, y - 1)] = TRUE
+					walls_in_path[player, linearize(avg_x, y - 1, 0)] = TRUE
 
 				if is_on_board(y + 1):
-					walls_in_path[player, linearize(avg_x, y + 1)] = TRUE
+					walls_in_path[player, linearize(avg_x, y + 1, 0)] = TRUE
 
 			# vertical move
 			else:
 				if is_on_board(x - 1):
-					walls_in_path[player, linearize(x - 1, avg_y)] = TRUE
+					walls_in_path[player, linearize(x - 1, avg_y, 1)] = TRUE
 
 				if is_on_board(x + 1):
-					walls_in_path[player, linearize(x + 1, avg_y)] = TRUE
+					walls_in_path[player, linearize(x + 1, avg_y, 1)] = TRUE
 
 		#. Calculate linear location in array from x and y
-		method linearize( int x, y -> int ):
-			return x - 1 + BOARD_SIZE / 2 * (y - 1) + 1
+		method linearize( int x, y, o -> int ):
+			return x - 1 + BOARD_SIZE / 2 * (y - 1) + o
 
 		#. Negascout algorithm
 		method negascout(

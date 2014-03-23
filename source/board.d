@@ -420,7 +420,7 @@ class Board
 			{
 				if (!place_wall(move[0], move[1], move[2]))
 				{
-					throw new Exception(format("AI TRIED TO PLAY ", move));
+					throw new Exception(format("AI TRIED TO PLAY %s", move));
 				}
 			}
 
@@ -428,7 +428,7 @@ class Board
 			{
 				if (!move_piece(move[0], move[1]))
 				{
-					throw new Exception(format("AI TRIED TO PLAY ", move));
+					throw new Exception(format("AI TRIED TO PLAY %s", move));
 				}
 			}
 
@@ -694,15 +694,14 @@ class Board
 				// walls in path
 				int x = 9;
 				int y = 1;
-				int o = 2;
+				int o = 1;
 
-				assert(board.walls_in_path[1][x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]);
-				x = 7;
-				assert(board.walls_in_path[1][x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]);
+				assert(board.walls_in_path[1][linearize(x, y, o)]);
+				assert(board.walls_in_path[1][linearize(x, y, o)]);
 				y = 15;
-				assert(board.walls_in_path[0][x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]);
+				assert(board.walls_in_path[0][linearize(x, y, o)]);
 				x = 9;
-				assert(board.walls_in_path[0][x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]);
+				assert(board.walls_in_path[0][linearize(x, y, o)]);
 
 				// Walls cannot cut off both people
 				board.place_wall(3, 7, 2);
@@ -775,8 +774,8 @@ class Board
 			{
 				foreach (y; iota(1, BOARD_SIZE - 1, 2))
 				{
-					assert(board.walls_in_path[0][board.linearize(x, y)]);
-					assert(board.walls_in_path[1][board.linearize(x, y)]);
+					assert(board.walls_in_path[0][board.linearize(x, y, 1)]);
+					assert(board.walls_in_path[1][board.linearize(x, y, 1)]);
 				}
 			}
 		}
@@ -1340,12 +1339,12 @@ class Board
 			{
 				if (is_on_board(y - 1))
 				{
-					walls_in_path[player][linearize(avg_x, y - 1)] = true;
+					walls_in_path[player][linearize(avg_x, y - 1, 0)] = true;
 				}
 
 				if (is_on_board(y + 1))
 				{
-					walls_in_path[player][linearize(avg_x, y + 1)] = true;
+					walls_in_path[player][linearize(avg_x, y + 1, 0)] = true;
 				}
 			}
 
@@ -1354,20 +1353,20 @@ class Board
 			{
 				if (is_on_board(x - 1))
 				{
-					walls_in_path[player][linearize(x - 1, avg_y)] = true;
+					walls_in_path[player][linearize(x - 1, avg_y, 1)] = true;
 				}
 
 				if (is_on_board(x + 1))
 				{
-					walls_in_path[player][linearize(x + 1, avg_y)] = true;
+					walls_in_path[player][linearize(x + 1, avg_y, 1)] = true;
 				}
 			}
 		}
 
 		/// Calculate linear location in array from x and y
-		int linearize(int x, int y)
+		int linearize(int x, int y, int o)
 		{
-			return x - 1 + BOARD_SIZE / 2 * (y - 1) + 1;
+			return x - 1 + BOARD_SIZE / 2 * (y - 1) + o;
 		}
 
 		/// Negascout algorithm
