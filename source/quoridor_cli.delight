@@ -10,10 +10,17 @@ import std.conv
 procedure main( string[] args ):
 
 	if args.length less than 3:
-		raise "Usage: ./quoridor {time for p1} {time for p2} [{move 1}...]\n Time of 0 for p1 or p2 indicates a human player"
+		print "Usage: ./quoridor {seconds for p1} {seconds for p2} [{move 1}...]"
+		print "Time of 0 for p1 or p2 indicates a human player"
+		return
 
-	if not isNumeric( args[1] ) or not isNumeric( args[2] ):
-		raise "Length of time for p1 must be numeric"
+	if not isNumeric( args[1] ):
+		print "Length of time for p1 must be numeric"
+		return
+
+	if not isNumeric( args[2] ):
+		print "Length of time for p2 must be numeric"
+		return
 
 	int[2] times = [ to!int( args[1] ), to!int( args[2] ) ]
 

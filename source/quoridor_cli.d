@@ -1,3 +1,4 @@
+import std.stdio : writeln;
 /++
  + A command line interface for the quoridor ai in board.d
  + author: Peter Massey-Plantinga
@@ -14,12 +15,21 @@ void main(string[] args)
 
 	if (args.length < 3)
 	{
-		throw new Exception("Usage: ./quoridor {time for p1} {time for p2} [{move 1}...]\n Time of 0 for p1 or p2 indicates a human player");
+		writeln("Usage: ./quoridor {seconds for p1} {seconds for p2} [{move 1}...]");
+		writeln("Time of 0 for p1 or p2 indicates a human player");
+		return;
 	}
 
-	if (!isNumeric(args[1]) || !isNumeric(args[2]))
+	if (!isNumeric(args[1]))
 	{
-		throw new Exception("Length of time for p1 must be numeric");
+		writeln("Length of time for p1 must be numeric");
+		return;
+	}
+
+	if (!isNumeric(args[2]))
+	{
+		writeln("Length of time for p2 must be numeric");
+		return;
 	}
 
 	int[2] times = [to!int(args[1]), to!int(args[2])];
