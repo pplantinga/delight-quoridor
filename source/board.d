@@ -821,7 +821,7 @@ class Board
 				move_array[2] = m.captures.back == "h";
 
 				// Walls are in a different place than moves, so add 1 to each value
-				move_array[] = move_array[] + 1;
+				move_array[] += 1;
 			}
 
 			return move_array;
