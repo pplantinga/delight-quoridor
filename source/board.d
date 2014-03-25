@@ -1169,18 +1169,15 @@ class Board
 		 +   0 for no path
 		 +/
 		int path_length(int player)
-		in
 		{
 			int other_player = (player + 1) % 2;
 			my_board[my_x[other_player]][my_y[other_player]] = 0;
-		}
-		out
-		{
-			int other_player = (player + 1) % 2;
-			my_board[my_x[other_player]][my_y[other_player]] = other_player + 1;
-		}
-		body
-		{
+
+			scope (exit)
+			{
+				my_board[my_x[other_player]][my_y[other_player]] = other_player + 1;
+			}
+
 			// get current location
 			int x = my_x[player];
 			int y = my_y[player];
