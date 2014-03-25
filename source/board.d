@@ -1,3 +1,4 @@
+import std.stdio : writeln;
 import std.range : iota;
 /++
  + The 'Board' class holds all the information
@@ -413,7 +414,12 @@ class Board
 				}
 			}
 
-			writeln(i);
+			// Print the level that we got to
+			debug
+			{
+				writeln(i);
+			}
+
 			sw.stop();
 			
 			if (move[2])

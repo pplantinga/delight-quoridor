@@ -299,7 +299,10 @@ class Board:
 				else:
 					break
 
-			writeln(i)
+			# Print the level that we got to
+			debug:
+				print i
+
 			sw.stop()
 
 			if move[2]:
