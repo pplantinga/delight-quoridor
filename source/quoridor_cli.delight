@@ -30,7 +30,7 @@ procedure main( string[] args ):
 	for move in args[3 .. $]:
 		board.move( move )
 
-	board.print_board()
+	print_board(board)
 
 	string move
 	int winner
@@ -54,7 +54,7 @@ procedure main( string[] args ):
 				try:
 					winner = board.move( move )
 					if winner:
-						board.print_board()
+						print_board(board)
 						writeln( "Player ", winner, " wins!" )
 						break
 
@@ -67,10 +67,82 @@ procedure main( string[] args ):
 			move = board.ai_move( times[ turn ] )
 			if move.length more than 2 and move[2] equal to 'w':
 
-				board.print_board()
+				print_board(board)
 				writeln( "Player ", turn + 1, " wins!" )
 				break
 
-		board.print_board()
+		print_board(board)
 		turn = ( turn + 1 ) % 2
+
+#. Prints the board nicely
+procedure print_board(Board b):
+	write("\n")
+
+	# Draw the walls of player 2
+	for j in 0 .. 2:
+		for i in 0 .. b.wall_count(1):
+			write(" |  ")
+		write("\n")
+
+	# Draw the board header
+	write("\n   ")
+	for c in 'a' .. 'j':
+		write("   " ~ c)
+	write("\n   ")
+	for i in 0 .. b.board_size() / 2 + 1:
+		write("+---")
+	writeln("+")
+
+	# Draw the board with low y at the bottom
+	for i in 0 .. b.board_size():
+		if i % 2 equal to 0:
+			string number = format("%s", i / 2 + 1)
+
+			# append a space to shorter numbers so formatting looks nice
+			if number.length equal to 1:
+				number ~= " "
+			write(number, " |")
+		else:
+			write("   +")
+
+		for j in 0 .. b.board_size():
+			# If we're at a wall location
+			if j % 2 equal to 1:
+				if b.board_value(j, i) equal to 3:
+					write("#")
+				else:
+					write("|")
+
+			# Even rows have pieces
+			else if i % 2 equal to 0:
+				# Write a piece if one exists here
+				if b.board_value(j, i) not equal to 0:
+					write(" ", b.board_value(j, i), " ")
+				else:
+					write("   ")
+
+			# Odd rows have walls
+			else:
+				if b.board_value(j, i) equal to 3:
+					write("###")
+				else:
+					write("---")
+
+		if i % 2 equal to 0:
+			writeln("|")
+		else:
+			writeln("+")
+
+	write("   ")
+	for i in 0 .. b.board_size() / 2 + 1:
+		write("+---")
+	writeln("+\n")
+
+	# Draw each player's walls
+	for j in 0 .. 2:
+		for i in 0 .. b.wall_count(0):
+			write(" |  ")
+		write("\n")
+	write("\n")
+
 

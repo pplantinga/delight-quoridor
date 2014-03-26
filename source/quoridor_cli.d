@@ -42,7 +42,7 @@ void main(string[] args)
 		board.move(move);
 	}
 
-	board.print_board();
+	print_board(board);
 	
 	string move;
 	int winner;
@@ -75,7 +75,7 @@ void main(string[] args)
 					winner = board.move(move);
 					if (winner)
 					{
-						board.print_board();
+						print_board(board);
 						writeln("Player ", winner, " wins!");
 						break;
 					}
@@ -96,14 +96,134 @@ void main(string[] args)
 			if (move.length > 2 && move[2] == 'w')
 			{
 
-				board.print_board();
+				print_board(board);
 				writeln("Player ", turn + 1, " wins!");
 				break;
 			}
 		}
 
-		board.print_board();
+		print_board(board);
 		turn = (turn + 1) % 2;
 	}
 }
+
+/// Prints the board nicely
+void print_board(ref Board b)
+{
+	write("\n");
+	
+	// Draw the walls of player 2
+	foreach (j; 0 .. 2)
+	{
+		foreach (i; 0 .. b.wall_count(1))
+		{
+			write(" |  ");
+		}
+		write("\n");
+	}
+
+	// Draw the board header
+	write("\n   ");
+	foreach (c; 'a' .. 'j')
+	{
+		write("   " ~ c);
+	}
+	write("\n   ");
+	foreach (i; 0 .. b.board_size() / 2 + 1)
+	{
+		write("+---");
+	}
+	writeln("+");
+	
+	// Draw the board with low y at the bottom
+	foreach (i; 0 .. b.board_size())
+	{
+		if (i % 2 == 0)
+		{
+			string number = format("%s", i / 2 + 1);
+
+			// append a space to shorter numbers so formatting looks nice
+			if (number.length == 1)
+			{
+				number ~= " ";
+			}
+			write(number, " |");
+		}
+		else
+		{
+			write("   +");
+		}
+
+		foreach (j; 0 .. b.board_size())
+		{
+			// If we're at a wall location
+			if (j % 2 == 1)
+			{
+				if (b.board_value(j, i) == 3)
+				{
+					write("#");
+				}
+				else
+				{
+					write("|");
+				}
+			}
+
+			// Even rows have pieces
+			else if (i % 2 == 0)
+			{
+				// Write a piece if one exists here
+				if (b.board_value(j, i) != 0)
+				{
+					write(" ", b.board_value(j, i), " ");
+				}
+				else
+				{
+					write("   ");
+				}
+			}
+
+			// Odd rows have walls
+			else
+			{
+				if (b.board_value(j, i) == 3)
+				{
+					write("###");
+				}
+				else
+				{
+					write("---");
+				}
+			}
+		}
+
+		if (i % 2 == 0)
+		{
+			writeln("|");
+		}
+		else
+		{
+			writeln("+");
+		}
+	}
+
+	write("   ");
+	foreach (i; 0 .. b.board_size() / 2 + 1)
+	{
+		write("+---");
+	}
+	writeln("+\n");
+	
+	// Draw each player's walls
+	foreach (j; 0 .. 2)
+	{
+		foreach (i; 0 .. b.wall_count(0))
+		{
+			write(" |  ");
+		}
+		write("\n");
+	}
+	write("\n");
+}
+
 

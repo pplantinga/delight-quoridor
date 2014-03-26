@@ -74,123 +74,18 @@ class Board
 		assert(new_board.my_x[0] == BOARD_SIZE / 2);
 	}
 
-	/// Prints the board nicely
-	auto print_board()
+	/// Accessor methods
+	int board_value(int x, int y)
 	{
-		write("\n");
-		
-		// Draw the walls of player 2
-		foreach (j; 0 .. 2)
-		{
-			foreach (i; 0 .. my_walls[1])
-			{
-				write(" |  ");
-			}
-			write("\n");
-		}
-
-		// Draw the board header
-		write("\n   ");
-		foreach (c; 'a' .. 'j')
-		{
-			write("   " ~ c);
-		}
-		write("\n   ");
-		foreach (i; 0 .. BOARD_SIZE / 2 + 1)
-		{
-			write("+---");
-		}
-		writeln("+");
-		
-		// Draw the board with low y at the bottom
-		foreach (i; 0 .. BOARD_SIZE)
-		{
-			if (i % 2 == 0)
-			{
-				string number = format("%s", i / 2 + 1);
-
-				// append a space to shorter numbers so formatting looks nice
-				if (number.length == 1)
-				{
-					number ~= " ";
-				}
-				write(number, " |");
-			}
-			else
-			{
-				write("   +");
-			}
-
-			foreach (j; 0 .. BOARD_SIZE)
-			{
-				// If we're at a wall location
-				if (j % 2 == 1)
-				{
-					if (my_board[j][i] == 3)
-					{
-						write("#");
-					}
-					else
-					{
-						write("|");
-					}
-				}
-
-				// Even rows have pieces
-				else if (i % 2 == 0)
-				{
-					// Write a piece if one exists here
-					if (my_board[j][i] != 0)
-					{
-						write(" ", my_board[j][i], " ");
-					}
-					else
-					{
-						write("   ");
-					}
-				}
-
-				// Odd rows have walls
-				else
-				{
-					if (my_board[j][i] == 3)
-					{
-						write("###");
-					}
-					else
-					{
-						write("---");
-					}
-				}
-			}
-
-			if (i % 2 == 0)
-			{
-				writeln("|");
-			}
-			else
-			{
-				writeln("+");
-			}
-		}
-
-		write("   ");
-		foreach (i; 0 .. BOARD_SIZE / 2 + 1)
-		{
-			write("+---");
-		}
-		writeln("+\n");
-		
-		// Draw each player's walls
-		foreach (j; 0 .. 2)
-		{
-			foreach (i; 0 .. my_walls[0])
-			{
-				write(" |  ");
-			}
-			write("\n");
-		}
-		write("\n");
+		return my_board[x][y];
+	}
+	int wall_count(int player)
+	{
+		return my_walls[player];
+	}
+	auto board_size()
+	{
+		return BOARD_SIZE;
 	}
 
 	/++
