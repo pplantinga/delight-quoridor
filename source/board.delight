@@ -348,7 +348,7 @@ class Board:
 				# make the move
 				my_x[my_turn % 2] = x
 				my_y[my_turn % 2] = y
-				my_board[old_x ,  old_y] = 0
+				my_board[old_x, old_y] = 0
 				my_board[x, y] = my_turn % 2 + 1
 
 				# update shortest path length
@@ -368,8 +368,8 @@ class Board:
 
 			Board board = new Board()
 			board.move_piece(BOARD_SIZE / 2, BOARD_SIZE - 3)
-			assert board.my_board[BOARD_SIZE / 2 ,  BOARD_SIZE - 3] equal to 1
-			assert board.my_board[BOARD_SIZE / 2 ,  BOARD_SIZE - 1] equal to 0
+			assert board.my_board[BOARD_SIZE / 2, BOARD_SIZE - 3] equal to 1
+			assert board.my_board[BOARD_SIZE / 2, BOARD_SIZE - 1] equal to 0
 
 		#. Checks for wall legality, and if legal, places the wall
 
@@ -1184,7 +1184,7 @@ class Board:
 							or walls in their own path, but opposite orientation to block
 						if (
 								# Walls in my opponent's path
-								b.walls_in_path[(b.my_turn + 1) % 2 ,  x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]
+								b.walls_in_path[(b.my_turn + 1) % 2, linearize(x, y, o)]
 
 								# walls that block the wall the opponent would place if I move
 								or opponent_move
