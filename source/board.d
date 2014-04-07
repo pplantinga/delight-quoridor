@@ -1,5 +1,10 @@
 import std.stdio : writeln;
 import std.range : iota;
+bool In(H, N)(H h, N n) {
+	foreach (i; h)
+		if (i == n) return true;
+	return false;
+}
 /++
  + The 'Board' class holds all the information
  + pertaining to a quoridor board, like the ai
@@ -8,15 +13,11 @@ import std.range : iota;
  + Start Date: Dec 16, 2011
  +/
 
-import std.stdio;
-import std.math;
-import std.algorithm;
-import std.container;
-import std.datetime;
-import std.random;
-import std.conv;
-import std.regex;
-import std.string;
+import std.math : abs;
+import std.datetime : StopWatch;
+import std.random : uniform;
+import std.conv : to;
+import std.string : format;
 
 class Board
 {
@@ -33,7 +34,7 @@ class Board
 		my_walls[] = WALL_COUNT;
 		my_turn = 0;
 		path_lengths = [path_length(0), path_length(1)];
-		my_openings = [uniform(0, 6), uniform(0, 6)];
+		my_openings = [uniform(0, 6) - 1, uniform(0, 6) - 1];
 	}
 
 	unittest
@@ -261,7 +262,6 @@ class Board
 	 + Returns: the move string (e.g. 'e3' or 'b7v')
 	 +   with a 'w' at the end if this move ended the game
 	 +/
-	
 	string ai_move(int seconds)
 	{
 
@@ -457,7 +457,6 @@ class Board
 		 +
 		 + Returns: whether or not the move occurred 
 		 +/
-		
 		bool move_piece(int x, int y)
 		{
 
@@ -505,7 +504,6 @@ class Board
 		 +   y = the vertical location
 		 +   o = the orientation (1 for vertical, 2 for horizontal)
 		 +/
-		
 		bool place_wall(int x, int y, int o)
 		{
 
@@ -520,7 +518,7 @@ class Board
 			int test_length_one;
 			int test_length_two;
 			 // check player 1's path if the wall blocks it
-			if (walls_in_path[0][x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1])
+			if (walls_in_path[0][linearize(x, y, o)])
 			{
 
 				test_length_one = path_length(0);
@@ -535,7 +533,7 @@ class Board
 			}
 
 			// check player 2's path if the wall blocks it
-			if (walls_in_path[1][x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1])
+			if (walls_in_path[1][linearize(x, y, o)])
 			{
 
 				test_length_two = path_length(1);
@@ -595,7 +593,7 @@ class Board
 				// walls in path
 				int x = 9;
 				int y = 1;
-				int o = 1;
+				int o = 2;
 
 				assert(board.walls_in_path[1][linearize(x, y, o)]);
 				assert(board.walls_in_path[1][linearize(x, y, o)]);
@@ -620,7 +618,8 @@ class Board
 				assert(!board.place_wall(9, 13, 2));
 				assert(!board.place_wall(9, 3, 2));
 
-				// Walls are allowed to technically cut off people, but only when the last spot is taken by a person
+				// Walls are allowed to technically cut off people,
+				 // but only when the last spot is taken by a person
 				board.place_wall(1, 15, 2);
 				board.place_wall(5, 15, 2);
 				board.place_wall(11, 15, 2);
@@ -656,6 +655,7 @@ class Board
 			}
 		}
 
+		// Add a wall at x, y, o
 		auto wall_val(int x, int y, int o, int val)
 		{
 
@@ -675,8 +675,8 @@ class Board
 			{
 				foreach (y; iota(1, BOARD_SIZE - 1, 2))
 				{
-					assert(board.walls_in_path[0][board.linearize(x, y, 1)]);
-					assert(board.walls_in_path[1][board.linearize(x, y, 1)]);
+					assert(board.walls_in_path[0][board.linearize(x, y, 2)]);
+					assert(board.walls_in_path[1][board.linearize(x, y, 2)]);
 				}
 			}
 		}
@@ -692,10 +692,11 @@ class Board
 		int[3] move_string_to_array(string move_string)
 		{
 
-			auto m = match(move_string, regex("^([a-i])([1-9])(h|v)?$"));
-			if (m.empty)
+			assert(In(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'], move_string[0]));
+			assert(In(['1', '2', '3', '4', '5', '6', '7', '8', '9'], move_string[1]));
+			if (move_string.length == 3)
 			{
-				throw new Exception("Invalid move format");
+				assert(In(['h', 'v'], move_string[2]));
 			}
 
 			int[3] move_array;
@@ -707,7 +708,7 @@ class Board
 			move_array[0] = (to!int(move_string[0]) - 97) * 2;
 
 			// Handle number
-			move_array[1] = (to!int(m.captures[2]) - 1) * 2;
+			move_array[1] = (to!int(move_string[1]) - 1) * 2;
 
 			if (!is_on_board(move_array[0]) || !is_on_board(move_array[1]))
 			{
@@ -715,10 +716,10 @@ class Board
 			}
 
 			// Special rules apply if we've got a wall rather than a move
-			if (m.captures.back == "h" || m.captures.back == "v")
+			if (move_string.length == 3)
 			{
 
-				move_array[2] = m.captures.back == "h";
+				move_array[2] = move_string[2] == 'h';
 
 				// Walls are in a different place than moves, so add 1 to each value
 				move_array[] += 1;
@@ -1090,10 +1091,10 @@ class Board
 			int h = heuristic(player, y);
 
 			// To keep track of where we go
-			int[BOARD_SIZE / 2 + 1][BOARD_SIZE / 2 + 1] paths;
+			int[BOARD_SIZE][BOARD_SIZE] paths;
 			
 			// Starting location
-			paths[x / 2][y / 2] = 1;
+			paths[x][y] = 1;
 
 			// This is a sort of priority queue, specific to this application
 			 // We'll only be adding elements of the same or slightly lower priority
@@ -1127,11 +1128,11 @@ class Board
 				{
 					if ((
 					is_legal_move(i[0], i[1], x, y)
-						 && paths[i[0] / 2][i[1] / 2] == 0
+						 && paths[i[0]][i[1]] == 0
 					))
 					{
 						h = heuristic(player, i[1]);
-						paths[i[0] / 2][i[1] / 2] = 100 * x + y + 2;
+						paths[i[0]][i[1]] = 100 * x + y + 2;
 						nodes[g + h + 2] ~= [i[0], i[1], g + 2];
 					}
 				}
@@ -1173,12 +1174,12 @@ class Board
 			int old_x;
 			int old_y;
 			
-			while (paths[x / 2][y / 2] != 1)
+			while (paths[x][y] != 1)
 			{
 				old_x = x;
 				old_y = y;
-				x = paths[x / 2][y / 2] / 100;
-				y = paths[old_x / 2][y / 2] % 100 - 2;
+				x = paths[x][y] / 100;
+				y = paths[old_x][y] % 100 - 2;
 				add_walls(player, x, y, old_x, old_y);
 			}
 
@@ -1227,6 +1228,10 @@ class Board
 			}
 		}
 
+		/++
+		 + This function helps keep track of walls that would interrupt
+		 + the shortest path, so we can recalculate when necessary
+		 +/
 		auto add_walls(int player, int x, int y, int old_x, int old_y)
 		{
 			int avg_x = (x + old_x) / 2;
@@ -1237,12 +1242,12 @@ class Board
 			{
 				if (is_on_board(y - 1))
 				{
-					walls_in_path[player][linearize(avg_x, y - 1, 0)] = true;
+					walls_in_path[player][linearize(avg_x, y - 1, 1)] = true;
 				}
 
 				if (is_on_board(y + 1))
 				{
-					walls_in_path[player][linearize(avg_x, y + 1, 0)] = true;
+					walls_in_path[player][linearize(avg_x, y + 1, 1)] = true;
 				}
 			}
 
@@ -1251,12 +1256,12 @@ class Board
 			{
 				if (is_on_board(x - 1))
 				{
-					walls_in_path[player][linearize(x - 1, avg_y, 1)] = true;
+					walls_in_path[player][linearize(x - 1, avg_y, 2)] = true;
 				}
 
 				if (is_on_board(x + 1))
 				{
-					walls_in_path[player][linearize(x + 1, avg_y, 1)] = true;
+					walls_in_path[player][linearize(x + 1, avg_y, 2)] = true;
 				}
 			}
 		}
@@ -1264,7 +1269,7 @@ class Board
 		/// Calculate linear location in array from x and y
 		int linearize(int x, int y, int o)
 		{
-			return x - 1 + BOARD_SIZE / 2 * (y - 1) + o;
+			return x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1;
 		}
 
 		/// Negascout algorithm
@@ -1629,6 +1634,7 @@ class Board
 			);
 		}
 
+		/// Opening book, very basic
 		int[] opening(int which)
 		{
 
@@ -1646,38 +1652,19 @@ class Board
 				return initial_array[my_turn];
 			}
 
-			int[][] first_opening = [[8, 10, 0], [8, 6, 0], [9, 11, 2], [9, 5, 2]];
-			int[][] second_opening = [[9, 13, 2], [9, 3, 2], [8, 10, 0], [8, 6, 0]];
-			int[][] third_opening = [[9, 15, 1], [9, 1, 1], [9, 13, 2], [9, 3, 2]];
-			int[][] fourth_opening = [[8, 10, 0], [8, 6, 0], [7, 11, 2], [7, 5, 2]];
-			int[][] fifth_opening = [[7, 13, 2], [7, 3, 2], [8, 10, 0], [8, 6, 0]];
-			int[][] sixth_opening = [[7, 15, 1], [7, 1, 1], [7, 13, 2], [7, 3, 2]];
+			auto openings = [
+			[[8, 10, 0], [8, 6, 0], [9, 11, 2], [9, 5, 2]], 
+				[[9, 13, 2], [9, 3, 2], [8, 10, 0], [8, 6, 0]], 
+				[[9, 15, 1], [9, 1, 1], [9, 13, 2], [9, 3, 2]], 
+				[[8, 10, 0], [8, 6, 0], [7, 11, 2], [7, 5, 2]], 
+				[[7, 13, 2], [7, 3, 2], [8, 10, 0], [8, 6, 0]], 
+				[[7, 15, 1], [7, 1, 1], [7, 13, 2], [7, 3, 2]]
+			];
 
 			// Different openings, moves 4-8
 			if (my_turn < 8)
 			{
-				switch (which)
-				{
-					case 1:
-						return first_opening[my_turn - 4];
-					case 2:
-						return second_opening[my_turn - 4];
-					case 3:
-						return third_opening[my_turn - 4];
-					
-					// same openings, but mirrored
-					case 4:
-						return fourth_opening[my_turn - 4];
-					case 5:
-						return fifth_opening[my_turn - 4];
-					case 6:
-						return sixth_opening[my_turn - 4];
-					
-					// if outside this range, just use negascout
-					default:
-						return null;
-					
-				}
+				return openings[which][my_turn - 4];
 			}
 
 			// We're past the end of the openings
