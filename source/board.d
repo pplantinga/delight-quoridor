@@ -700,29 +700,23 @@ class Board
 		 +/
 		int[3] move_string_to_array(string move_string)
 		{
-
-			assert(In(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'], move_string[0]));
-			assert(In(['1', '2', '3', '4', '5', '6', '7', '8', '9'], move_string[1]));
 			if (move_string.length == 3)
 			{
+				assert(In(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'], move_string[0]));
+				assert(In(['1', '2', '3', '4', '5', '6', '7', '8'], move_string[1]));
 				assert(In(['h', 'v'], move_string[2]));
+			}
+			else
+			{
+				assert(In(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'], move_string[0]));
+				assert(In(['1', '2', '3', '4', '5', '6', '7', '8', '9'], move_string[1]));
 			}
 
 			int[3] move_array;
 			
-			/+
-			 + I don't advocate doing char to int conversions this way...
-			 + it was just a quick generalization
-			 +/
-			move_array[0] = (to!int(move_string[0]) - 97) * 2;
-
-			// Handle number
-			move_array[1] = (to!int(move_string[1]) - 1) * 2;
-
-			if (!is_on_board(move_array[0]) || !is_on_board(move_array[1]))
-			{
-				throw new Exception("Move out of bounds");
-			}
+			// Convert chars to ints, normalizing to 0, 2, 4, 6...
+			move_array[0] = (move_string[0] - 'a') * 2;
+			move_array[1] = (move_string[1] - '1') * 2;
 
 			// Special rules apply if we've got a wall rather than a move
 			if (move_string.length == 3)
