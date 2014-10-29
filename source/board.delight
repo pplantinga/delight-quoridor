@@ -26,6 +26,8 @@ class Board:
 		my_openings = [uniform(0, 6) - 1, uniform(0, 6) - 1]
 
 	unittest:
+		print "Starting default constructor test"
+
 		Board board = new Board()
 		assert board.my_x equal to [BOARD_SIZE / 2, BOARD_SIZE / 2]
 		assert board.my_y equal to [BOARD_SIZE - 1, 0]
@@ -47,6 +49,8 @@ class Board:
 		my_openings = b.my_openings
 
 	unittest:
+		print "Starting copy constructor test"
+
 		Board board = new Board()
 		board.place_wall(3, 3, 1)
 
@@ -89,6 +93,8 @@ class Board:
 		return 0
 
 	unittest:
+		print "Starting move() test"
+
 		Board board = new Board()
 
 		# XXX: IF YOU CHANGE THE BOARD SIZE, CHANGE THIS
@@ -365,6 +371,7 @@ class Board:
 			return FALSE
 
 		unittest:
+			print "Starting move_piece() test"
 
 			Board board = new Board()
 			board.move_piece(BOARD_SIZE / 2, BOARD_SIZE - 3)
@@ -428,6 +435,7 @@ class Board:
 			return TRUE
 
 		unittest:
+			print "Starting place_wall() test"
 
 			Board board = new Board()
 
@@ -519,6 +527,7 @@ class Board:
 			my_board[x - x_add, y - y_add] = val
 
 		unittest:
+			print "Starting walls_in_path test"
 
 			Board board = new Board()
 			for x in [BOARD_SIZE / 2 - 1, BOARD_SIZE / 2 + 1]:
@@ -562,6 +571,8 @@ class Board:
 			return move_array
 
 		unittest:
+			print "Starting move_string_to_array() test"
+
 			Board board = new Board()
 			int[3] move_array = board.move_string_to_array("e3")
 			assert move_array[0] equal to 8
@@ -681,6 +692,8 @@ class Board:
 				return FALSE
 
 		unittest:
+			print "Starting is_legal_move() test"
+
 			Board board = new Board()
 
 			int old_x = board.my_x[board.my_turn % 2]
@@ -784,7 +797,10 @@ class Board:
 			return TRUE
 
 		unittest:
+			print "Starting is_legal_wall test"
+
 			Board board = new Board()
+
 			# Walls
 			assert board.is_legal_wall(1, 1, 1)
 			assert board.is_legal_wall(1, 1, 2)
@@ -833,6 +849,8 @@ class Board:
 			return d not less than 0 and d less than BOARD_SIZE
 
 		unittest:
+			print "Starting is_on_board() test"
+
 			Board board = new Board()
 			assert board.is_on_board(0)
 			assert board.is_on_board(1)
@@ -936,6 +954,7 @@ class Board:
 			return g / 2
 
 		unittest:
+			print "Starting path_lengths test"
 
 			Board board = new Board()
 
@@ -1313,6 +1332,8 @@ class Board:
 			return NULL
 
 		unittest:
+			print "Starting opening() test"
+
 			static if BOARD_SIZE equal to 17:
 
 				Board b

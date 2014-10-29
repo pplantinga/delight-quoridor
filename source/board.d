@@ -39,6 +39,8 @@ class Board
 
 	unittest
 	{
+		writeln("Starting default constructor test");
+
 		Board board = new Board();
 		assert(board.my_x == [BOARD_SIZE / 2, BOARD_SIZE / 2]);
 		assert(board.my_y == [BOARD_SIZE - 1, 0]);
@@ -66,6 +68,8 @@ class Board
 
 	unittest
 	{
+		writeln("Starting copy constructor test");
+
 		Board board = new Board();
 		board.place_wall(3, 3, 1);
 		
@@ -130,6 +134,8 @@ class Board
 
 	unittest
 	{
+		writeln("Starting move() test");
+
 		Board board = new Board();
 
 		// XXX: IF YOU CHANGE THE BOARD SIZE, CHANGE THIS
@@ -489,6 +495,7 @@ class Board
 
 		unittest
 		{
+			writeln("Starting move_piece() test");
 
 			Board board = new Board();
 			board.move_piece(BOARD_SIZE / 2, BOARD_SIZE - 3);
@@ -572,6 +579,7 @@ class Board
 
 		unittest
 		{
+			writeln("Starting place_wall() test");
 
 			Board board = new Board();
 
@@ -669,6 +677,7 @@ class Board
 
 		unittest
 		{
+			writeln("Starting walls_in_path test");
 
 			Board board = new Board();
 			foreach (x; [BOARD_SIZE / 2 - 1, BOARD_SIZE / 2 + 1])
@@ -730,6 +739,8 @@ class Board
 
 		unittest
 		{
+			writeln("Starting move_string_to_array() test");
+
 			Board board = new Board();
 			int[3] move_array = board.move_string_to_array("e3");
 			assert(move_array[0] == 8);
@@ -877,6 +888,8 @@ class Board
 
 		unittest
 		{
+			writeln("Starting is_legal_move() test");
+
 			Board board = new Board();
 
 			int old_x = board.my_x[board.my_turn % 2];
@@ -1000,7 +1013,10 @@ class Board
 
 		unittest
 		{
+			writeln("Starting is_legal_wall test");
+
 			Board board = new Board();
+
 			// Walls
 			assert(board.is_legal_wall(1, 1, 1));
 			assert(board.is_legal_wall(1, 1, 2));
@@ -1055,6 +1071,8 @@ class Board
 
 		unittest
 		{
+			writeln("Starting is_on_board() test");
+
 			Board board = new Board();
 			assert(board.is_on_board(0));
 			assert(board.is_on_board(1));
@@ -1188,6 +1206,7 @@ class Board
 
 		unittest
 		{
+			writeln("Starting path_lengths test");
 
 			Board board = new Board();
 
@@ -1673,6 +1692,8 @@ class Board
 
 		unittest
 		{
+			writeln("Starting opening() test");
+
 			static if (BOARD_SIZE == 17)
 			{
 
