@@ -595,12 +595,12 @@ class Board
 				int y = 1;
 				int o = 2;
 
-				assert(board.walls_in_path[1][linearize(x, y, o)]);
-				assert(board.walls_in_path[1][linearize(x, y, o)]);
+				assert(board.walls_in_path[1][board.linearize(x, y, o)]);
+				assert(board.walls_in_path[1][board.linearize(x, y, o)]);
 				y = 15;
-				assert(board.walls_in_path[0][linearize(x, y, o)]);
+				assert(board.walls_in_path[0][board.linearize(x, y, o)]);
 				x = 9;
-				assert(board.walls_in_path[0][linearize(x, y, o)]);
+				assert(board.walls_in_path[0][board.linearize(x, y, o)]);
 
 				// Walls cannot cut off both people
 				board.place_wall(3, 7, 2);
