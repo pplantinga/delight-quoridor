@@ -1509,7 +1509,7 @@ class Board
 						 +/
 						if ((
 						// Walls in my opponent's path
-								b.walls_in_path[(b.my_turn + 1) % 2][x - 1 + BOARD_SIZE / 2 * (y - 1) + o - 1]
+								b.walls_in_path[(b.my_turn + 1) % 2][linearize(x, y, o)]
 
 								// walls that block the wall the opponent would place if I move
 								 || opponent_move
