@@ -34,7 +34,7 @@ class Board
 		my_walls[] = WALL_COUNT;
 		my_turn = 0;
 		path_lengths = [path_length(0), path_length(1)];
-		my_openings = [uniform(0, 6) - 1, uniform(0, 6) - 1];
+		my_openings = [uniform(0, 6), uniform(0, 6)];
 	}
 
 	unittest
